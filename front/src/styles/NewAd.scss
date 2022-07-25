@@ -1,0 +1,93 @@
+.newAd_container {
+  .images_card {
+    @include size(700px);
+    @include border_box();
+    @include indents(20px 0 10px, 4px);
+  }
+
+  .images {
+    @include flex_options($align_items: flex-basis, $wrap: wrap);
+  }
+
+  .image_card {
+    @include relative( !important);
+    @include size(160px !important, 160px);
+    @include flex_options($align_items: center);
+    align-self: flex-end;
+    @include indents(4px);
+  }
+
+  .first_loading_card {
+    @include flex_center();
+    @include size(180px !important, 180px);
+    @include indents(4px);
+  }
+
+  .loading_card {
+    @include flex_center();
+    @include size(160px !important, 160px);
+    align-self: flex-end;
+    @include indents(4px);
+  }
+
+  .deleting_backdrop,
+  .loading_backdrop {
+    @include absolute();
+    visibility: visible !important;
+    background-color: rgba(255, 243, 224, 0.3) !important;
+    @include size(100% !important, 100% !important);
+    opacity: 1 !important;
+  }
+
+  .main-image_card {
+    @include relative( !important);
+    @include size(180px !important, 180px);
+    @include flex_options($align_items: center);
+    @include indents(4px);
+  }
+
+  .price_block {
+    @include flex_options($justify_content: space-between);
+    @include indents(10px 0 !important);
+    align-items: top;
+  }
+
+  .price_field {
+    @include size(550px);
+  }
+
+  .price_label {
+    @include size($height: 56px);
+  }
+}
+
+.deleteButton {
+  @include absolute(4px, 4px);
+  background-color: #fff !important;
+  animation: myAnimation 0.3s linear;
+}
+
+.deleteButton_invisible {
+  @include absolute(4px, 4px);
+  opacity: 0;
+  background-color: #fff !important;
+  transition: 0.3s ease-in-out;
+}
+
+.info_card {
+  @include size(500px, 500px);
+  background-color: $secondary_bright  !important;
+  position: fixed;
+  top: 150px;
+  right: 16px;
+}
+
+.full-width_field {
+  @include indents(0 !important);
+  @include size(100%);
+  transition: all 3s ease-in-out;
+}
+
+#icon-button-file input {
+  display: none !important;
+}

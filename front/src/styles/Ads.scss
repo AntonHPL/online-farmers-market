@@ -1,0 +1,80 @@
+.main-page_container {
+  @include flex_options($justify_content: space-between);
+  @include indents($padding: 8px 0);
+  @include size($height: calc(100vh - 64px));
+  background-color: $secondary_bright;
+  @include border_box();
+
+  .main {
+    @include size(calc(100% - 364px));
+    @include indents(0 0 0 4px);
+
+    .ads {
+      @include relative();
+
+      .card_media {
+        @include size(200px !important, 200px !important);
+        background-color: $primary_main;
+        @include flex_options($justify_content: center);
+        border-radius: 4px;
+        @include indents($padding: 1px);
+
+        img {
+          @include size(100% !important, 100% !important);
+          object-fit: contain;
+          border-radius: 4px;
+        }
+      }
+
+      .card {
+        @include flex_options($isImportant: !important);
+        @include indents(0 0 8px);
+      }
+
+      .card_skeleton {
+        @include indents(0 !important, 0 !important);
+        @include size($height: 300px);
+        @include border_box();
+      }
+
+      .card_content {
+        @include flex_options(column, space-between, $isImportant:  !important);
+        @include size(500px);
+        @include border_box();
+      }
+
+      .card_actions {
+        @include flex_options($justify_content: flex-end, $align_items: flex-end);
+        @include size(calc(100% - 700px));
+        @include border_box();
+      }
+    }
+  }
+}
+
+.not_found {
+  @include flex_options(column, center);
+  @include size(calc(100% - 360px));
+}
+
+.search_and_sort {
+  @include flex_options($justify_content: space-between);
+  @include indents(0 0 8px);
+
+  .MuiFormControl-root {
+    @include size(calc(100% - 216px), 40px !important);
+
+    .MuiInput-root {
+      @include size($height: 100% !important);
+    }
+  }
+
+  .sorting {
+    @include indents(0 !important, 0 !important);
+    @include size(200px);
+
+    .MuiPaper-root {
+      @include indents(50px !important);
+    }
+  }
+}

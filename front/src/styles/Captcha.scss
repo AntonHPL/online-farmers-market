@@ -1,0 +1,19 @@
+.captcha_container {
+  @include flex_options($justify_content: space-between, $align_items: center);
+  @include indents(5px 0);
+  @include size(100%);
+
+  .half-width_field {
+    @include size(calc(50% - 5px), 40px);
+    @include flex_options($align_items: center);
+    @include indents($padding: 0 !important);
+
+    &:nth-child(1) {
+      justify-content: space-between;
+    }
+
+    canvas {
+      border-radius: 4px;
+    }
+  }
+}

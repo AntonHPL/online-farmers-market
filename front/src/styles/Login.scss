@@ -1,0 +1,4 @@
+.alert {
+  @include size(100% !important);
+  @include border_box();
+}
