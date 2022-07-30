@@ -1,65 +1,40 @@
-.chat_container {
-  @include indents(5px);
-  @include flex_options();
+.profile_container {
+  @include indents($padding: 0 20px);
+  @include size($height: calc(100vh - 68px));
   background-color: $secondary_bright;
 
-  .chat {
-    @include flex_options(column);
-    @include border(red);
-    @include size(700px, 500px);
-    overflow-y: auto;
+  .profile-image_container {
+    @include flex_options();
 
-    .sent_message,
-    .received_message {
-      @include size(fit-content, fit-content);
-      max-width: 300px;
-      @include indents(5px 0, 10px);
-    }
-
-    .sent_message {
-      background-color: $primary_dark;
-      color: white;
-      align-self: flex-end;
-      border-radius: 8px 8px 0;
-    }
-
-    .received_message {
-      background-color: #fff;
-      align-self: flex-start;
-      border-radius: 8px 8px 8px 0;
-    }
-  }
-
-  form {
-    @include flex_options($justify_content: space-between, $align_items: center);
-
-    .form_row {
-      @include size(calc(100% - 40px - 5px));
-    }
-  }
-
-  .interlocutor {
-    @include flex_options($align_items: center);
-    @include size(300px, 70px);
-    @include indents(0 0 5px, 5px);
-    @include border_box();
-
-    &:hover {
-      background-color: $primary_bright;
+    .profile_image {
+      @include size(50px);
       cursor: pointer;
     }
+  }
 
-    .interlocutor_image {
-      @include size(50px);
+  .account_circle {
+    @include size(100%, 100%);
+  }
+
+  .account_image {
+    @include size(83.33px, 83.33px);
+    border-radius: 50%;
+    overflow: hidden;
+    @include flex_center();
+
+    img {
+      object-fit: cover;
+      min-width: 88.33px;
+      min-height: 88.33px;
     }
 
-    div {
-      @include indents(0 0 0 5px);
-    }
   }
 }
 
-.chat_container p:hover {
-  text-decoration: underline;
-  cursor: pointer;
+
+
+.icBut {
+  width: 100px;
+  height: 100px;
+  padding: 0 !important;
 }

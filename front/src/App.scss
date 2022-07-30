@@ -8,6 +8,7 @@
 @import "./styles/Login.scss";
 @import "./styles/NewAd.scss";
 @import "./styles/Profile.scss";
+@import "./styles/Chats.scss";
 
 @import url($fonts_url);
 
@@ -29,7 +30,6 @@
 form {
   @include flex_options(column);
   @include size(700px);
-  @include border(black);
 }
 
 .half-width_field {
@@ -55,8 +55,8 @@ form {
 
 h4 {
   @include size(700px);
-  @include indents(20px 0 !important);
-  @include border(red, 4px);
+  @include indents($padding: 20px 0 !important);
+  // @include border(red, 4px);
 }
 
 h5 {
@@ -73,4 +73,137 @@ h5 {
 
 .prompt {
   @include indents(5px 0 0);
+}
+
+a {
+  cursor: pointer;
+}
+
+.menu_container {
+  width: 360px;
+
+  .skeleton {
+    @include size($height: calc(48px * 7))
+  }
+}
+
+.slider {
+  border: 1px solid $primary_main;
+  width: 500px;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.slides {
+  width: 500%;
+  height: 500px;
+  display: flex;
+}
+
+.slides input {
+  display: none;
+}
+
+.slide {
+  width: 20%;
+  transition: .5s ease-in-out;
+  @include flex_center();
+}
+
+.slide img {
+  @include size(100%, 100%);
+  object-fit: contain;
+}
+
+/*css for manual slide navigation*/
+
+.navigation-manual {
+  position: absolute;
+  width: 500px;
+  margin-top: -40px;
+  @include flex_center();
+}
+
+.manual-btn {
+  border: 2px solid $primary_main;
+  @include size(20px, 20px);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: .5s ease-in-out;
+
+  &:hover {
+    border: 2px solid $primary_dark;
+    background: $secondary_main;
+  }
+
+  &:active {
+    border: 2px solid $primary_dark;
+    background: $primary_dark;
+  }
+}
+
+.selected_manual-button {
+  border: 2px solid $primary_main;
+  @include size(20px, 20px);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: .5s ease-in-out;
+  background: $primary_main;
+
+  &:hover,
+  :active {
+    border: 2px solid $primary_main;
+    cursor: default
+  }
+}
+
+.navigation-manual div:not(:last-child) {
+  margin-right: 40px;
+}
+
+/*css for automatic navigation*/
+
+.navigation-auto {
+  position: absolute;
+  display: flex;
+  width: 500px;
+  justify-content: center;
+  margin-top: 460px;
+}
+
+.navigation-auto div {
+  border: 2px solid #40D3DC;
+  padding: 5px;
+  border-radius: 10px;
+  transition: .5s ease-in-out;
+}
+
+.navigation-auto div:not(:last-child) {
+  margin-right: 40px;
+}
+
+.first-message_dialog {
+  .seller-account_image {
+    @include size(45px, 45px);
+    border-radius: 50%;
+    overflow: hidden;
+    @include flex_center();
+    margin-right: 10px;
+
+    img {
+      object-fit: cover;
+      min-width: 45px;
+      min-height: 45px;
+    }
+  }
+
+  .seller_info {
+    @include flex_options($align-items: center);
+    // @include size(100px, 30px)
+  }
+
+  .MuiDialogContent-root {
+    padding-bottom: 0 !important;
+  }
 }

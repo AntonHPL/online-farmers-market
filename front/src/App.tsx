@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,12 +5,14 @@ import {
 } from "react-router-dom";
 
 import NewAd from "./components/NewAd";
+import Ad from "./components/Ad";
 import Ads from "./components/Ads";
+import Header from "./components/Header";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { orange } from "@mui/material/colors";
-import { WithUserContext } from "./components/UserContext";
 import Profile from "./components/Profile";
 import "./App.scss";
+import Chats from "./components/Chats";
 
 const theme = createTheme({
   palette: {
@@ -26,14 +27,14 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Router>
+        <Header />
         <Routes>
-          <Route
-            path="/"
-            element={<WithUserContext children={<Ads />} />}
-          />
-          <Route path="/new-advertisement" element={<WithUserContext children={<NewAd />} />} />
-          <Route path="/dashboard" element={<WithUserContext children={<Ads />} />} />
-          <Route path="/profile" element={<WithUserContext children={<Profile />} />} />
+          <Route path="/" element={<Ads />}/>
+          <Route path="/ad/:id" element={<Ad />} />
+          <Route path="/new-advertisement" element={<NewAd />} />
+          <Route path="/profile" element={<Profile />}>
+            <Route path="chats" element={<Chats />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

@@ -1,4 +1,5 @@
 export interface AdType {
+  _id: string,
   images: Array<{ data: string }>,
   textInfo: {
     category: string,
@@ -9,6 +10,9 @@ export interface AdType {
     region: string,
     subCategory: string,
     title: string,
+    sellerName: string,
+    sellerEmail: string,
+    sellerId: string,
   },
 };
 
@@ -20,7 +24,7 @@ export interface GetAdsPropsType {
   setAds: (ads: Array<AdType>) => void,
   setPageCount: (pageCount: number) => void,
   setPage: (page: number) => void,
-  setLoading: (loading: boolean) => void,
+  setAdsLoading: (loading: boolean) => void,
   category?: string,
 };
 
@@ -41,7 +45,9 @@ export interface EmptyAdType {
   region: string,
   price: number,
   city: string,
-  name: string,
+  sellerName: string,
+  sellerEmail: string,
+  sellerId: string,
 };
 
 interface CityType {
@@ -122,18 +128,13 @@ export interface MessageType {
   creationDate?: string,
 };
 
-export type InterlocutorType = string | null;
+export type InterlocutorType = { id: string, name: string } | null;
 
 export interface ChatType {
-  creationDate: string,
-  interlocutor: InterlocutorType,
-  messages: Array<MessageType>,
-};
-
-export interface DataChatType {
+  adId: string,
   creationDate: string,
   messages: Array<MessageType>,
-  participants: Array<string>,
+  participants: Array<InterlocutorType>,
   _id: string,
 };
 
@@ -143,10 +144,35 @@ export interface UserContextInterface {
   logInDialog: { open: boolean },
   setLogInDialog: (logInDialog: { open: boolean }) => void,
   setTokenValidation: (tokenValidation: boolean) => void,
+  isAccountImageChanged: boolean,
+  setIsAccountImageChanged: (isAccountImageChanged: boolean) => void,
 };
 
 export type UserType = {
-  id: string,
+  _id: string,
   email: string,
-  name: string
+  name: string,
+  image: { data: string },
 } | null;
+
+export interface BriefAdType {
+  _id: string,
+  images: Array<ImageType>,
+  textInfo: { title: string },
+}
+
+export interface ModifiedChatType {
+  _id: string,
+  myInterlocutor: InterlocutorType,
+  messages: Array<MessageType>,
+  creationDate: string,
+  adId: string,
+  adImage?: string,
+  adTitle?: string,
+  sellerImage?: string,
+};
+
+export interface SellerType {
+  _id: string,
+  image: { data: string },
+}

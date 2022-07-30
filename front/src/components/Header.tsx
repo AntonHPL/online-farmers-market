@@ -20,6 +20,7 @@ const Header: FC = () => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   // const [menu, setMenu] = useState(null);
   const [signUpDialog, setSignUpDialog] = useState({ open: false });
+  const [accountImage, setAccountImage] = useState("");
 
   const isMenuOpen = !!anchorEl;
   // const isMobileMenuOpen = !!mobileMoreAnchorEl;
@@ -59,6 +60,10 @@ const Header: FC = () => {
         setLogInDialog({ open: true });
       })
   };
+
+  useEffect(() => {
+    user && user.image && setAccountImage(user.image.data);
+  }, [user])
   // const handleMobileMenuOpen = (event) => {
   //   setMobileMoreAnchorEl(event.currentTarget);
   // };
@@ -194,9 +199,14 @@ const Header: FC = () => {
                 onClick={openMenu}
                 color="inherit"
                 endIcon={
-                  <Badge badgeContent={17} color="error">
-                    <AccountCircle />
-                  </Badge>}
+                  <Badge badgeContent={17} max = {9} color="error">
+                    <div className="account_image">
+                      <img
+                        src={`data:image/png;base64,${accountImage}`}
+                      />
+                    </div>
+                  </Badge>
+                }
                 className="profile_button"
               >
                 {user.name}

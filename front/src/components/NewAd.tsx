@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { useEffect, useState, DragEvent, FormEvent } from 'react';
-import Header from "./Header";
+import { useEffect, useState, useContext, DragEvent, FormEvent } from 'react';
+import { UserContext } from "./UserContext";
 import { styled } from '@mui/material/styles';
 // import SaveIcon from '@mui/icons-material/Save';
 import {
@@ -37,6 +37,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { CategoryType, EmptyAdType, ImageType, RegionType, DataCategoryType, DataRegionType } from '../types';
 
 const NewAd = () => {
+    const { user } = useContext(UserContext);
     const emptyAd: EmptyAdType = {
         title: "",
         category: "",
@@ -45,9 +46,12 @@ const NewAd = () => {
         region: "",
         price: 0,
         city: "",
-        name: "Mike"
+        sellerName: user?.name || "",
+        sellerEmail: user?.email || "",
+        sellerId: user?._id || "",
     };
 
+    
     const [imagesToUpload, setImagesToUpload] = useState<FileList | null>(null);
     const [images, setImages] = useState<Array<ImageType>>([]);
     const [ad, setAd] = useState<EmptyAdType>(emptyAd);
@@ -208,7 +212,9 @@ const NewAd = () => {
                 setImagesBeingUploaded(0);
                 setImageBeingRemoved("");
             })
-    }
+    };
+
+    console.log("imagesbeing", imagesBeingUploaded);
 
     const deleteImage = (id: string): void => {
         setImageBeingRemoved(id);
@@ -275,7 +281,7 @@ const NewAd = () => {
 
     return (
         <div className="newAd_container">
-            <Header />
+
             <Typography variant="h4">
                 Create a new Ad
             </Typography>
@@ -297,7 +303,13 @@ const NewAd = () => {
                             onChange={e => setImagesToUpload(e.target.files)}
                             multiple
                         />
-                        <Button color="primary" aria-label="upload picture" component="span" startIcon={<PhotoCamera />} sx={{ textTransform: "none" }}>
+                        <Button
+                            color="primary"
+                            aria-label="upload picture"
+                            component="span"
+                            startIcon={<PhotoCamera />}
+                            sx={{ textTransform: "none" }}
+                        >
                             Click to add photos...
                         </Button>
                     </label>
@@ -526,9 +538,9 @@ const NewAd = () => {
                     // required
                     label="Name"
                     variant="outlined"
-                    value={ad.name}
+                    value={ad.sellerName}
                     placeholder="E. g. John Doe"
-                    onChange={e => setAd({ ...ad, name: e.target.value })}
+                    disabled
                     className="form_row"
                 />
                 <TextField
@@ -536,9 +548,9 @@ const NewAd = () => {
                     // required
                     label="Email"
                     variant="outlined"
-                    // value = {name}
+                    value = {ad.sellerEmail}
                     placeholder="E. g. John Doe"
-                    // onChange = {e => setName(e.target.value)}
+                    disabled
                     className="form_row"
                 />
                 <Button

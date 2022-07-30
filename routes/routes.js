@@ -7,10 +7,12 @@ const {
   getImages,
   getMenu,
   getRegions,
+  getUser,
   validateToken,
   verifyEmail,
   logOut,
   postAd,
+  addAccountImage,
   logIn,
   signUp,
   finishAd,
@@ -20,7 +22,12 @@ const {
   deleteUnsavedAd,
   postChat,
   getChats,
-  addMessages
+  addMessages,
+  getAccountImage,
+  getAd,
+  getSeller,
+  getAdsBriefly,
+  getSellers,
 } = require("./controllers")
 
 const router = express.Router();
@@ -35,11 +42,18 @@ router.get("/api/images/:creationDate", getImages);
 router.get('/api/menu', getMenu);
 router.get("/api/regions", getRegions);
 router.get("/api/chats/:userId", getChats);
+router.get("/api/user/:id", getUser);
 router.get("/api/validate-token", validateToken);
+router.get("/api/account-image/:userId", getAccountImage);
+router.get("/api/ad/:id", getAd);
+router.get("/api/seller/:id", getSeller);
+router.get("/api/sellers", getSellers);
 router.post("/api/chat", postChat);
 router.post("/ad", upload.array("imagesInput", 4), postAd);
+router.put("/api/account-image", upload.single("imageInput"), addAccountImage);
 router.post("/api/log-in", logIn);
 router.post("/api/sign-up", signUp);
+router.get("/api/ads-briefly", getAdsBriefly);
 
 router.put("/api/ad/:creationDate", finishAd);
 router.put("/api/images", upload.array("imagesInput", 4), addImages);

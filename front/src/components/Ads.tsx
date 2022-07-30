@@ -1,13 +1,14 @@
 import { useState, useEffect, FC } from 'react';
-import Header from './Header';
 import Menu from "./Menu";
 import { getAds } from "../functions/functions";
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
   Card,
   CardActions,
   CardMedia,
+  Skeleton,
   CardContent,
   CircularProgress,
   Typography,
@@ -29,11 +30,13 @@ const Ads: FC = () => {
   const [ads, setAds] = useState<Array<AdType>>([]);
   const [sortingParams, setSortingParams] = useState<Array<string>>([]);
   const [pageCount, setPageCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const PER_PAGE = 2;
+  const [adsLoading, setAdsLoading] = useState(false);
+  const PER_PAGE = 3;
   const [page, setPage] = useState(1);
   const [subString, setSubString] = useState("");
   const [category, setCategory] = useState("");
+  const navigate = useNavigate();
+  const renderParticularAd = (id: string): void => navigate(`/ad/${id}`);
   // const { user } = useContext(UserContext);
 
   const getAdsProps: GetAdsPropsType = {
@@ -44,7 +47,7 @@ const Ads: FC = () => {
     setAds,
     setPageCount,
     setPage,
-    setLoading,
+    setAdsLoading,
   };
 
   useEffect(() => {
@@ -60,7 +63,6 @@ const Ads: FC = () => {
 
   return (
     <div>
-      <Header />
       <div className="main-page_container">
         <Menu
           getAdsProps={getAdsProps}
@@ -108,40 +110,56 @@ const Ads: FC = () => {
             />
           </div>
           <div className="ads">
-            <Backdrop className="loading_backdrop" open={loading}>
-              <CircularProgress className="loading" />
-            </Backdrop>
-            {ads.map(el => (
-              <Card className="card">
-                <CardActionArea className="card_media">
-                  <CardMedia
-                    component="img"
-                    alt="1"
-                    // height="140"
-                    image={`data:image/png;base64,${el.images.length && el.images[0].data}`}
-                  />
-                </CardActionArea>
-                <CardContent className="card_content">
-                  <div>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {el.textInfo.title}
+            {adsLoading ?
+              function () {
+                let content = [];
+                for (let i = 0; i < 3; i++) {
+                  content.push(
+                    <Skeleton variant="rectangular" className="skeleton" />
+                  );
+                };
+                return content;
+              }() :
+              ads.map(el => (
+                <Card className="card">
+                  <CardActionArea className="card_media" onClick = {() => renderParticularAd(el._id)}>
+                    <CardMedia
+                      component="img"
+                      alt="1"
+                      // height="140"
+                      image={`data:image/png;base64,${el.images.length && el.images[0].data}`}
+                    />
+                  </CardActionArea>
+                  <CardContent className="card_content">
+                    <div>
+                      <Typography gutterBottom variant="h5" component="div" onClick = {() => renderParticularAd(el._id)} className = "product_title">
+                        {el.textInfo.title}
+                      </Typography>
+                      <Typography gutterBottom variant="h6" component="div">
+                        USD {el.textInfo.price}
+                      </Typography>
+                    </div>
+                    <Typography variant="body2">
+                      {el.textInfo.category}, {el.textInfo.subCategory}
+                      <br />
+                      By {el.textInfo.name} from {el.textInfo.region}, {el.textInfo.city}
                     </Typography>
-                    <Typography gutterBottom variant="h6" component="div">
-                      USD {el.textInfo.price}
-                    </Typography>
-                  </div>
-                  <Typography variant="body2">
-                    {el.textInfo.category}, {el.textInfo.subCategory}
-                    <br />
-                    By {el.textInfo.name} from {el.textInfo.region}, {el.textInfo.city}
-                  </Typography>
-                </CardContent>
-                <CardActions className="card_actions">
-                  {/* <Button size="small">Share</Button> */}
-                  <Button size="large">Learn More</Button>
-                </CardActions>
-              </Card>
-            ))}
+                  </CardContent>
+                  <CardActions className="card_actions">
+                    {/* <Button size="small">Share</Button> */}
+                    <Button size="large">Learn More</Button>
+                  </CardActions>
+                </Card>
+              ))
+            }
+            {!ads.length &&
+              <div className="plug">
+                <SearchOff fontSize="large" />
+                <Typography variant="body1">
+                  Nothing was found. Try to change the Search Criteria.
+                </Typography>
+              </div>
+            }
           </div>
           {pageCount > 1 &&
             <Pagination
@@ -153,12 +171,6 @@ const Ads: FC = () => {
               onChange={(_, page) => setPage(page)}
             />
           }
-        </div>
-        <div className="not_found">
-          <Typography variant="body1">
-            Nothing was found. Try to change the Search Criteria.
-          </Typography>
-          <SearchOff />
         </div>
       </div>
     </div>

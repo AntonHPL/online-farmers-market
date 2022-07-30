@@ -37,7 +37,7 @@ const getAds = (req, res) => {
   const field = req.query.field === "price" ? "textInfo.price" : "creationDate";
   const sortingOptions = new Object();
   sortingOptions[field] = order;
-  console.log(req.query);
+  // console.log(req.query);
   const searchOptions = req.query.category ? {
     "textInfo.category": req.query.category
   } : req.query.subString ? {
@@ -73,6 +73,27 @@ const postAd = (req, res) => {
     .save()
     .then(() => res.json("Ok"))
     .catch(error => console.log(error));
+};
+
+const addAccountImage = (req, res) => {
+  User
+    .updateOne({ _id: req.body.userId }, {
+      $set: {
+        image: {
+          id: `${req.file.filename}_${req.file.size}`,
+          data: fs.readFileSync(req.file.path),
+          contentType: "image/jpg"
+        }
+      }
+    })
+    .then(() => res.json("Ok"))
+    .catch(error => console.log(error));
+};
+
+const getAccountImage = (req, res) => {
+  User
+    .findOne({ _id: req.params.userId }, { "image.data": true })
+    .then(image => res.json(image));
 };
 
 const deleteUnsavedAd = (req, res) => {
@@ -185,7 +206,7 @@ const signUp = (req, res) => {
     //   rejectUnauthorized: false,
     // }
   });
-  console.log(req.headers)
+  // console.log(req.headers)
   const mailOptions = {
     from: "Flea Market <antonhpl@mail.ru>",
     to: user.email,
@@ -206,7 +227,7 @@ const signUp = (req, res) => {
 
 const verifyEmail = (req, res) => {
   const token = req.query.token;
-  console.log(token)
+  // console.log(token)
   User
     .findOne({ emailToken: token })
     .then(user => {
@@ -231,8 +252,8 @@ const logIn = (req, res) => {
     })
     .then(passwordValidation => {
       if (passwordValidation) {
-        const token = jwt.sign({ userId: userFound.id, userName: userFound.name, userEmail: userFound.email }, process.env.JWT_SECRET);
-        console.log("token:", token);
+        const token = jwt.sign({ userId: userFound.id }, process.env.JWT_SECRET);
+        // console.log("token:", token);
         res.cookie("access-token", token, { maxAge: cookieAge });
         res.json(true);
       } else {
@@ -247,9 +268,9 @@ const validateToken = (req, res, next) => {
   if (token) {
     const validToken = jwt.verify(token, process.env.JWT_SECRET)
     if (validToken) {
-      console.log(validToken);
+      console.log("validToken", validToken);
       res.user = validToken.id;
-      res.json({ user: { name: validToken.userName, email: validToken.userEmail, id: validToken.userId } });
+      res.json({ user: { id: validToken.userId } });
     } else {
       console.log("TOKEN EXPIRES")
       res.json(false);
@@ -266,20 +287,34 @@ const logOut = (req, res) => {
 };
 
 const postChat = (req, res) => {
-  const chat = new Chat({ participants: req.body.participants, messages: req.body.messages, creationDate: req.body.creationDate });
+  const chat = new Chat({
+    participants: req.body.participants,
+    messages: req.body.messages,
+    creationDate: req.body.creationDate,
+    adId: req.body.adId,
+  });
   chat.save().then(() => res.json("OK")).catch(error => console.log(error));
+};
+
+const getUser = (req, res) => {
+  User
+    .find({ _id: req.params.id }, { name: true, email: true, "image.data": true })
+    .then(user => {
+      res.json(user)
+    })
+    .catch(error => console.log(error));
 };
 
 const getChats = (req, res) => {
   Chat
-    .find({ participants: req.params.userId })
+    .find({ "participants.id": req.params.userId })
     .then(chats => res.json(chats))
     .catch(error => console.log(error));
 };
 
 const addMessages = (req, res) => {
   Chat
-    .updateOne({ creationDate: req.body.creationDate }, {
+    .updateOne({ _id: req.body.id }, {
       $push: {
         messages: {
           $each: req.body.messages,
@@ -288,6 +323,40 @@ const addMessages = (req, res) => {
     })
     .then(() => res.json("Ok"))
     .catch(error => console.log(error));
+};
+
+const getAd = (req, res) => {
+  Ad
+    .findOne({ _id: req.params.id })
+    .then(ad => res.json(ad))
+};
+
+const getAdsBriefly = (req, res) => {
+  // console.log("ha", req.query.adsIds)
+  Ad
+    .find(
+      { _id: { $in: JSON.parse(req.query.adsIds) } },
+      {
+        images: { $elemMatch: { main: true } },
+        "textInfo.title": true
+      }
+    )
+    .then(ads => res.json(ads))
+};
+
+const getSellers = (req, res) => {
+  User
+    .find(
+      { _id: { $in: JSON.parse(req.query.sellersIds) } },
+      { image: true, name: true }
+    )
+    .then(sellers => res.json(sellers));
+};
+
+const getSeller = (req, res) => {
+  User
+    .find({ _id: req.params.id }, { name: true, "image.data": true })
+    .then(user => res.json(user));
 };
 
 module.exports = {
@@ -300,6 +369,7 @@ module.exports = {
   verifyEmail,
   logOut,
   postAd,
+  addAccountImage,
   logIn,
   signUp,
   finishAd,
@@ -308,6 +378,12 @@ module.exports = {
   deleteAd,
   deleteUnsavedAd,
   postChat,
+  getUser,
   getChats,
-  addMessages
+  addMessages,
+  getAccountImage,
+  getAd,
+  getSeller,
+  getAdsBriefly,
+  getSellers,
 };

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { GetAdsPropsType } from "../types";
 
-export const getAds = ({ page, PER_PAGE, sortingParams, subString, setAds, setPageCount, setPage, setLoading, category = "" }: GetAdsPropsType) => {
-  setLoading(true);
+export const getAds = ({ page, PER_PAGE, sortingParams, subString, setAds, setPageCount, setPage, setAdsLoading, category = "" }: GetAdsPropsType) => {
+  setAdsLoading(true);
   axios
     .get("/api/ads/", {
       params: {
@@ -25,7 +25,7 @@ export const getAds = ({ page, PER_PAGE, sortingParams, subString, setAds, setPa
         .then(({ data }) => {
           setPageCount(Math.ceil(data / PER_PAGE));
           // setPage(1);
-          setLoading(false);
+          setAdsLoading(false);
         });
     })
 };

@@ -14,6 +14,10 @@ const chatSchema = new Schema({
     type: String,
     required: true,
   },
+  adId: {
+    type: String,
+    required: true,
+  }
 });
 
 const Chat = mongoose.model('Chat', chatSchema);

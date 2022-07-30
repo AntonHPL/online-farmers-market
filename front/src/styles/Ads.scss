@@ -1,6 +1,6 @@
 .main-page_container {
   @include flex_options($justify_content: space-between);
-  @include indents($padding: 8px 0);
+  @include indents($padding: 8px 20px 0 12px);
   @include size($height: calc(100vh - 64px));
   background-color: $secondary_bright;
   @include border_box();
@@ -13,8 +13,8 @@
       @include relative();
 
       .card_media {
-        @include size(200px !important, 200px !important);
-        background-color: $primary_main;
+        @include size(180px !important, 180px !important);
+        background-color: $primary_bright;
         @include flex_options($justify_content: center);
         border-radius: 4px;
         @include indents($padding: 1px);
@@ -23,12 +23,14 @@
           @include size(100% !important, 100% !important);
           object-fit: contain;
           border-radius: 4px;
+          pointer-events: none;
         }
       }
 
       .card {
-        @include flex_options($isImportant: !important);
+        @include flex_options($isImportant:  !important);
         @include indents(0 0 8px);
+        user-select: none;
       }
 
       .card_skeleton {
@@ -41,6 +43,12 @@
         @include flex_options(column, space-between, $isImportant:  !important);
         @include size(500px);
         @include border_box();
+
+        .product_title:hover {
+          cursor: pointer;
+          color: $primary_main;
+          transition: all .2s ease-in-out;
+        }
       }
 
       .card_actions {
@@ -49,12 +57,18 @@
         @include border_box();
       }
     }
-  }
-}
 
-.not_found {
-  @include flex_options(column, center);
-  @include size(calc(100% - 360px));
+    .plug {
+      @include flex_options(column, center, center);
+      @include size(100%, calc(100vh - 64px - 40px - 8px - 8px));
+    }
+  }
+
+  .skeleton {
+    @include size(100%, 180px);
+    @include indents(0 0 8px);
+    border-radius: 4px;
+  }
 }
 
 .search_and_sort {
