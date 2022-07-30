@@ -28,21 +28,37 @@ const Ad = () => {
   useEffect(() => {
     ad && axios.get(`/api/seller/${ad.textInfo.sellerId}`).then(({ data }) => setSeller({ name: data[0].name, image: data[0].image.data }))
   }, [ad]);
-  console.log(seller);
 
   const startConversation = () => {
-    setDialog({ open: true });
-    // navigate("/profile/chats");
+    ad &&
+      axios
+        .get(`/api/chat/${ad._id}`)
+        .then(({ data }) => {
+          if (data) {
+            navigate("/profile/chats");
+            localStorage.setItem("ad-id_selected", ad._id);
+          } else {
+            setDialog({ open: true })
+          }
+        });
   };
+
   const closeDialog = () => setDialog({ open: false });
   const sendMessage = () => {
-    axios.post("/api/chat", {
-      adId: params.id,
-      creationDate: new Date().toISOString(),
-      messages: [{ senderId: user?._id, message }],
-      participants: [{ name: user?.name, id: user?._id }, { name: ad?.textInfo.sellerName, id: ad?.textInfo.sellerId }],    
-    });
-  }
+    const creationDate = new Date().toISOString();
+    axios
+      .post("/api/chat", {
+        adId: params.id,
+        creationDate,
+        messages: [{ senderId: user?._id, message, creationDate }],
+        participants: [{ name: user?.name, id: user?._id }, { name: ad?.textInfo.sellerName, id: ad?.textInfo.sellerId }],
+      })
+      .then(() => {
+        setMessage("");
+        closeDialog();
+      })
+  };
+
   return (
     <div className="ad_container">
       <div className="slider">

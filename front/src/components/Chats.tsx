@@ -18,21 +18,16 @@ const Chats: FC = () => {
 	const [myId, setMyId] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [isChatChosen, setIsChatChosen] = useState(false);
-
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
 		const ws = new WebSocket("ws://localhost:3002");
-		ws.onopen = () => {
-			console.log("Connected to the WS Server.");
-		};
-		ws.onmessage = message => {
-			// console.log("Message from server: ", e.data)
-			setNewMessages(prev => Array.isArray(JSON.parse(message.data)) ? [...prev, ...JSON.parse(message.data)] : [...prev, JSON.parse(message.data)]);
-			// console.log("new message", JSON.parse(message.data));
-		};
+		ws.onopen = () => console.log("Connected to the WS Server.");
+		ws.onmessage = message => setNewMessages(prev => [...prev, JSON.parse(message.data)]);
 		setWebSocket(ws);
 	}, []);
+
+	console.log("oldMessages", oldMessages);
 
 	useEffect(() => {
 		user && setMyId(user._id)
@@ -106,6 +101,11 @@ const Chats: FC = () => {
 				});
 		};
 	}, [chatsData]);
+
+	useEffect(() => {
+		const adIdSelected = localStorage.getItem("ad-id_selected")
+		adIdSelected && chats.length && revealHistory(adIdSelected);
+	}, [chats]);
 	console.log("chats", chats);
 
 	const send = (e: FormEvent): void => {
@@ -143,8 +143,7 @@ const Chats: FC = () => {
 	}, [newMessages, oldMessages]);
 
 	const revealHistory = (el: string): void => {
-		const relatedChat = chats.find(chat => chat.myInterlocutor?.id === el);
-		console.log(relatedChat?.messages)
+		const relatedChat = chats.find(chat => chat.adId === el);
 		setNewMessages([]);
 		setOldMessages(relatedChat?.messages || []);
 		setChatId(relatedChat?._id || "");
@@ -160,34 +159,31 @@ const Chats: FC = () => {
 				<>
 					<div className="interlocutors">
 						{chats.map(chat => {
-							const myInterlocutor = chat.myInterlocutor;
 							const lastMessage = chat.messages[chat.messages.length - 1];
-							if (myInterlocutor) {
-								return (
-									<Paper className="interlocutor" onClick={() => revealHistory(myInterlocutor.id)}>
-										<div className="images_container">
-											<div className="ad_image">
-												<img src={`data:image/png;base64,${chat.adImage}`} />
-											</div>
-											{chat.sellerImage ?
-												<div className="seller_image">
-													<img src={`data:image/png;base64,${chat.sellerImage}`} />
-												</div> :
-												<AccountCircle className="interlocutor_image" />
-											}
+							return (
+								<Paper className={`interlocutor ${chatId === chat._id ? "selected" : ""}`} onClick={() => revealHistory(chat.adId)}>
+									<div className="images_container">
+										<div className="ad_image">
+											<img src={`data:image/png;base64,${chat.adImage}`} />
 										</div>
-										<div className="sender_info">
-											<Typography variant="h6">
-												{myInterlocutor.name}
-											</Typography>
-											<Typography variant="h6">
-												{chat.adTitle}
-											</Typography>
-											{lastMessage.senderId === myId ? `You: ${lastMessage.message}` : lastMessage.message}
-										</div>
-									</Paper>
-								);
-							};
+										{chat.sellerImage ?
+											<div className="seller_image">
+												<img src={`data:image/png;base64,${chat.sellerImage}`} />
+											</div> :
+											<AccountCircle className="interlocutor_image" />
+										}
+									</div>
+									<div className="sender_info">
+										<Typography variant="h6">
+											{chat.myInterlocutor?.name}
+										</Typography>
+										<Typography variant="h6">
+											{chat.adTitle}
+										</Typography>
+										{lastMessage.senderId === myId ? `You: ${lastMessage.message}` : lastMessage.message}
+									</div>
+								</Paper>
+							);
 						})}
 					</div>
 					<div className="chat_and_form">

@@ -82,7 +82,8 @@
     @include border_box();
 
     &:hover {
-      background-color: $primary_bright;
+      background-color: $primary_dark;
+      color: #fff;
       cursor: pointer;
 
       .seller_image {
@@ -143,16 +144,31 @@
     }
   }
 
+  .selected {
+    background: $primary_bright;
+
+    .seller_image {
+      border: 1px solid #fff !important;
+    }
+
+    .ad_image {
+      border: 1px solid #fff !important;
+    }
+  }
+
   .plug {
     @include size(100%, 100%);
     @include flex_center();
   }
 }
 
+
+
 .sender_info {
   h6 {
     line-height: 1.4 !important;
   }
+
   h6:nth-child(2) {
     font-weight: normal;
     font-size: 1.125rem;

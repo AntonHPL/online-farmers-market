@@ -359,6 +359,12 @@ const getSeller = (req, res) => {
     .then(user => res.json(user));
 };
 
+const determineChatExistence = (req, res) => {
+  Chat
+    .findOne({ adId: req.params.adId })
+    .then(chat => res.json(chat ? true : false))
+};
+
 module.exports = {
   getAds,
   countAds,
@@ -386,4 +392,5 @@ module.exports = {
   getSeller,
   getAdsBriefly,
   getSellers,
+  determineChatExistence,
 };

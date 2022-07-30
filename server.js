@@ -33,14 +33,14 @@ app.use("/api", createProxyMiddleware({
 }));
 
 const clients = {};
-const messages = [];
+// const messages = [];
 
 const v4 = uuid.v4;
 
 wss.on("connection", ws => {
     console.log(webSocketMessage("The Client is connected to the WebSocket Server."));
     // ws.send(JSON.stringify("The Client is connected to the WebSocket Server."));
-    ws.send(JSON.stringify(messages));
+    // ws.send(JSON.stringify(messages));
     const id = v4();
     clients[id] = ws;
     console.log(`New Client ${id}`);
@@ -49,7 +49,7 @@ wss.on("connection", ws => {
         const { senderId, message } = JSON.parse(data);
         // messages.push({ name, message });
         for (const id in clients) {
-                clients[id].send(JSON.stringify({ senderId, message, creationDate: new Date().toISOString() }))
+            clients[id].send(JSON.stringify({ senderId, message, creationDate: new Date().toISOString() }))
         };
         // ws.send(`${data}`);
         // wss.clients.forEach(client => {

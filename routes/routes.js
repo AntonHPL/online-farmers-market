@@ -28,6 +28,7 @@ const {
   getSeller,
   getAdsBriefly,
   getSellers,
+  determineChatExistence,
 } = require("./controllers")
 
 const router = express.Router();
@@ -48,6 +49,7 @@ router.get("/api/account-image/:userId", getAccountImage);
 router.get("/api/ad/:id", getAd);
 router.get("/api/seller/:id", getSeller);
 router.get("/api/sellers", getSellers);
+router.get("/api/chat/:adId", determineChatExistence);
 router.post("/api/chat", postChat);
 router.post("/ad", upload.array("imagesInput", 4), postAd);
 router.put("/api/account-image", upload.single("imageInput"), addAccountImage);

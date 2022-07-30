@@ -49,7 +49,6 @@ const Profile: FC = () => {
 
     return (
         <>
-            {/* <Header /> */}
             <div className="profile_container">
                 <Typography variant="h4">
                     My Profile
