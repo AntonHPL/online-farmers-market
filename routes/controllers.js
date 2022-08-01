@@ -35,17 +35,34 @@ const getAds = (req, res) => {
   const perPage = +req.query.perPage;
   const order = req.query.order === "asc" ? 1 : -1;
   const field = req.query.field === "price" ? "textInfo.price" : "creationDate";
+  const subString = req.query.subString;
+  const subCategory = req.query.subCategory;
+  const category = req.query.category;
   const sortingOptions = new Object();
   sortingOptions[field] = order;
-  // console.log(req.query);
-  const searchOptions = req.query.category ? {
-    "textInfo.category": req.query.category
-  } : req.query.subString ? {
-    "textInfo.title": new RegExp(req.query.subString, "gi")
-  } : {};
+  const regExp = new RegExp(subString, "gi");
+  const searchOptions = () => {
+    if (subString) {
+      if (category) {
+        return { "textInfo.title": regExp, "textInfo.category": category };
+      } else if (subCategory) {
+        return { "textInfo.title": regExp, "textInfo.subCategory": subCategory };
+      } else {
+        return { "textInfo.title": regExp };
+      };
+    } else if (!subString) {
+      if (category) {
+        return { "textInfo.category": category };
+      } else if (subCategory) {
+        return { "textInfo.subCategory": subCategory };
+      } else {
+        return {}
+      };
+    };
+  };
 
   Ad
-    .find(searchOptions, { textInfo: true, images: { $elemMatch: { main: true } } })
+    .find(searchOptions(), { textInfo: true, images: { $elemMatch: { main: true } } })
     .limit(perPage).skip((page - 1) * perPage)
     .sort(sortingOptions).collation({ locale: "en_US", numericOrdering: true })
     .then(ads => res.status(200).json(ads))

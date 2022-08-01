@@ -68,9 +68,7 @@ const Profile: FC = () => {
                             <IconButton component="span" size="large" className="icBut">
                                 {true ?
                                     <div className="account_image">
-                                        <img
-                                            src={`data:image/png;base64,${accountImage}`}
-                                        />
+                                        <img src={`data:image/png;base64,${accountImage}`} />
                                     </div> :
                                     <AccountCircle className="account_circle" />}
                             </IconButton>
@@ -120,15 +118,21 @@ const Profile: FC = () => {
                     onClose={closeConfirmationDialog}
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle>Wait a Minute!</DialogTitle>
+                    <DialogTitle>
+                        Wait a Minute!
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-slide-description">
                             Do you want to set this Image as your Profile Picture?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={() => setChangingAccountImage(!changingAccountImage)}>Yes</Button>
-                        <Button onClick={closeConfirmationDialog}>No</Button>
+                        <Button onClick={() => setChangingAccountImage(!changingAccountImage)}>
+                            Yes
+                        </Button>
+                        <Button onClick={closeConfirmationDialog}>
+                            No
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

@@ -87,7 +87,11 @@ const Authorization: FC = () => {
             </Button>
             <p className="prompt">
                 Already have an Account?&nbsp;
-                <Link onClick={() => setLogInDialog({ open: true })} underline="hover" className="log-in_link">
+                <Link
+                    onClick={() => setLogInDialog({ open: true })}
+                    underline="hover"
+                    className="log-in_link"
+                >
                     Log in
                 </Link>
             </p>

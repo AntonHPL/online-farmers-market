@@ -60,7 +60,10 @@ const Captcha: FC<{ validation: boolean }> = ({ validation }) => {
                     width={221 - 34 - 10}
                 >
                 </canvas>
-                <IconButton size="small" onClick={getCaptcha}>
+                <IconButton
+                    size="small"
+                    onClick={getCaptcha}
+                >
                     <ReplayIcon />
                 </IconButton>
             </div>

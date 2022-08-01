@@ -70,9 +70,16 @@ const Login: FC<{ setSignUpDialog: (signUpDialog: { open: boolean }) => void }> 
                 }}
                 className="form_row"
             />
-            <FormControlLabel control={<Checkbox checked={checked} />} label="Remember for 7 days." onChange={handleCookieAge} />
+            <FormControlLabel
+                control={<Checkbox checked={checked} />}
+                label="Remember for 7 days."
+                onChange={handleCookieAge}
+            />
             {error &&
-                <Alert severity="error" className="alert">
+                <Alert
+                    severity="error"
+                    className="alert"
+                >
                     {error}
                 </Alert>
             }
@@ -87,7 +94,11 @@ const Login: FC<{ setSignUpDialog: (signUpDialog: { open: boolean }) => void }> 
             </Button>
             <p className="prompt">
                 Don't have an Account yet?&nbsp;
-                <Link onClick={() => setSignUpDialog({ open: true })} underline="hover" className="log-in_link">
+                <Link
+                    onClick={() => setSignUpDialog({ open: true })}
+                    underline="hover"
+                    className="log-in_link"
+                >
                     Sign up
                 </Link>
             </p>

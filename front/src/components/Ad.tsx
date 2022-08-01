@@ -65,7 +65,10 @@ const Ad = () => {
         <div className="slides">
           {ad &&
             <>
-              <div className="slide" style={{ marginLeft: marginLeft }}>
+              <div
+                className="slide"
+                style={{ marginLeft: marginLeft }}
+              >
                 <img src={`data:image/png;base64,${ad.images[0].data}`} />
               </div>
               {ad.images.map((el, i) => {
@@ -140,8 +143,14 @@ const Ad = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Quit</Button>
-          <Button disabled={!message} onClick={sendMessage}>Send</Button>
+          <Button onClick={closeDialog}>
+            Quit
+          </Button>
+          <Button
+            disabled={!message}
+            onClick={sendMessage}>
+            Send
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

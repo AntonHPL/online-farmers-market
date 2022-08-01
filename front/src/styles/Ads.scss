@@ -1,94 +1,93 @@
-.main-page_container {
+.ads_container {
   @include flex_options($justify_content: space-between);
-  @include indents($padding: 8px 20px 0 12px);
-  @include size($height: calc(100vh - 64px));
+  @include indents($padding: 16px 24px 16px 8px);
+  min-height: calc(100vh - 64px);
   background-color: $secondary_bright;
   @include border_box();
 
   .main {
-    @include size(calc(100% - 364px));
-    @include indents(0 0 0 4px);
+    @include size(calc(100% - 360px - 8px));
+    @include indents(0 0 0 8px);
+
+    .sorting_and_search {
+      @include flex_options($justify_content: space-between);
+      @include indents(0 0 8px);
+
+      .sorting {
+        @include indents(0 !important, 0 !important);
+        @include size(200px);
+
+        .MuiPaper-root {
+          @include indents(50px !important);
+        }
+      }
+
+      .search {
+        @include size(calc(100% - 216px), 40px !important);
+
+        .MuiInput-root {
+          @include size($height: 100% !important);
+        }
+      }
+    }
 
     .ads {
       @include relative();
 
-      .card_media {
-        @include size(180px !important, 180px !important);
-        background-color: $primary_bright;
-        @include flex_options($justify_content: center);
+      .skeleton {
+        @include size(100%, 180px);
+        @include indents(0 0 8px);
         border-radius: 4px;
-        @include indents($padding: 1px);
-
-        img {
-          @include size(100% !important, 100% !important);
-          object-fit: contain;
-          border-radius: 4px;
-          pointer-events: none;
-        }
       }
 
       .card {
         @include flex_options($isImportant:  !important);
         @include indents(0 0 8px);
         user-select: none;
-      }
 
-      .card_skeleton {
-        @include indents(0 !important, 0 !important);
-        @include size($height: 300px);
-        @include border_box();
-      }
+        .card_action_area {
+          @include size(200px !important, 180px !important);
+          background-color: $primary_bright;
+          @include flex_options($justify_content: center);
+          border-radius: 4px;
+          @include indents($padding: 1px);
 
-      .card_content {
-        @include flex_options(column, space-between, $isImportant:  !important);
-        @include size(500px);
-        @include border_box();
+          img {
+            @include size(100% !important, 100% !important);
+            object-fit: contain;
+            border-radius: 4px;
+            pointer-events: none;
+          }
+        }
 
-        .product_title:hover {
-          cursor: pointer;
-          color: $primary_main;
-          transition: all .2s ease-in-out;
+        .card_content {
+          @include flex_options(column, space-between, $isImportant:  !important);
+          @include size(425px);
+          @include border_box();
+
+          .product_title:hover {
+            cursor: pointer;
+            color: $primary_main;
+            transition: all .2s ease-in-out;
+            width: fit-content;
+          }
+        }
+
+        .card_actions {
+          @include flex_options($justify_content: flex-end, $align_items: flex-end);
+          @include size(calc(100% - 625px));
+          @include border_box();
         }
       }
 
-      .card_actions {
-        @include flex_options($justify_content: flex-end, $align_items: flex-end);
-        @include size(calc(100% - 700px));
-        @include border_box();
+      .plug {
+        @include flex_options(column, center, center);
+        @include size(100%, calc(100vh - 64px - 40px - 8px - 8px));
       }
     }
-
-    .plug {
-      @include flex_options(column, center, center);
-      @include size(100%, calc(100vh - 64px - 40px - 8px - 8px));
-    }
-  }
-
-  .skeleton {
-    @include size(100%, 180px);
-    @include indents(0 0 8px);
-    border-radius: 4px;
-  }
-}
-
-.search_and_sort {
-  @include flex_options($justify_content: space-between);
-  @include indents(0 0 8px);
-
-  .MuiFormControl-root {
-    @include size(calc(100% - 216px), 40px !important);
-
-    .MuiInput-root {
-      @include size($height: 100% !important);
-    }
-  }
-
-  .sorting {
-    @include indents(0 !important, 0 !important);
-    @include size(200px);
-
-    .MuiPaper-root {
-      @include indents(50px !important);
+    nav {
+      @include flex_center();
+      @include indents(16px 0 0)
     }
   }
 }

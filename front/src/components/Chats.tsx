@@ -153,7 +153,10 @@ const Chats: FC = () => {
 	return (
 		<div className="chat_container">
 			{loading ?
-				<Backdrop className="loading_backdrop" open={true}>
+				<Backdrop
+					className="loading_backdrop"
+					open={true}
+				>
 					<CircularProgress className="loading" />
 				</Backdrop> :
 				<>
@@ -161,7 +164,10 @@ const Chats: FC = () => {
 						{chats.map(chat => {
 							const lastMessage = chat.messages[chat.messages.length - 1];
 							return (
-								<Paper className={`interlocutor ${chatId === chat._id ? "selected" : ""}`} onClick={() => revealHistory(chat.adId)}>
+								<Paper
+									className={`interlocutor ${chatId === chat._id ? "selected" : ""}`}
+									onClick={() => revealHistory(chat.adId)}
+								>
 									<div className="images_container">
 										<div className="ad_image">
 											<img src={`data:image/png;base64,${chat.adImage}`} />
@@ -204,14 +210,14 @@ const Chats: FC = () => {
 													className={el.senderId === myId ? "sent_message" : "received_message"}
 												>
 													{el.message}
-													<div>
+													<>
 														{el.creationDate && new Date(el.creationDate)
 															.toLocaleTimeString("en-US", {
 																hour: "numeric",
 																minute: "numeric"
 															})
 														}
-													</div>
+													</>
 												</Paper>
 											</>
 										)

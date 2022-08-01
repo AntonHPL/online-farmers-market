@@ -17,24 +17,25 @@ export interface AdType {
 };
 
 export interface GetAdsPropsType {
-  page: number,
-  PER_PAGE: number,
-  sortingParams: Array<string>,
-  subString: string,
+  functionProps: {
+    page: number,
+    PER_PAGE: number,
+    sortingParams: Array<string>,
+    subString: string,
+    category?: string,
+    subCategory?: string,
+  },
   setAds: (ads: Array<AdType>) => void,
   setPageCount: (pageCount: number) => void,
   setPage: (page: number) => void,
   setAdsLoading: (loading: boolean) => void,
-  category?: string,
 };
 
 export interface MenuPropsType {
   getAdsProps: GetAdsPropsType,
-  subString: string,
   setSubString: (subString: string) => void,
-  category: string,
   setCategory: (category: string) => void,
-  page: number,
+  setSubCategory: (subCategory: string) => void,
 };
 
 export interface EmptyAdType {

@@ -178,8 +178,14 @@ const Header: FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <div className="logo_container" onClick={() => navigate("/")}>
-            <img src={logo} alt="logo" />
+          <div
+            className="logo_container"
+            onClick={() => window.location.href = "/"}
+          >
+            <img
+              src={logo}
+              alt="logo"
+            />
           </div>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -187,7 +193,8 @@ const Header: FC = () => {
               size="large"
               aria-label="new_advertisement"
               color="inherit"
-              onClick={() => navigate("/new-advertisement")}>
+              onClick={() => navigate("/new-advertisement")}
+            >
               <AddCircleOutlineIcon />
             </IconButton>
             {user ?
@@ -199,11 +206,13 @@ const Header: FC = () => {
                 onClick={openMenu}
                 color="inherit"
                 endIcon={
-                  <Badge badgeContent={17} max = {9} color="error">
+                  <Badge
+                    badgeContent={17}
+                    max={9}
+                    color="error"
+                  >
                     <div className="account_image">
-                      <img
-                        src={`data:image/png;base64,${accountImage}`}
-                      />
+                      <img src={`data:image/png;base64,${accountImage}`} />
                     </div>
                   </Badge>
                 }
@@ -248,10 +257,16 @@ const Header: FC = () => {
         className="sign-up_dialog"
       >
         <DialogTitle>
-          {signUpDialog.open ? "Create an Account" : "Log in"}
+          {signUpDialog.open ?
+            "Create an Account" :
+            "Log in"
+          }
         </DialogTitle>
         <DialogContent>
-          {signUpDialog.open ? <Authorization /> : <Login setSignUpDialog={setSignUpDialog} />}
+          {signUpDialog.open ?
+            <Authorization /> :
+            <Login setSignUpDialog={setSignUpDialog} />
+          }
         </DialogContent>
       </Dialog>
     </Box>

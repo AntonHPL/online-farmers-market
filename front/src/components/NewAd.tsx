@@ -51,7 +51,7 @@ const NewAd = () => {
         sellerId: user?._id || "",
     };
 
-    
+
     const [imagesToUpload, setImagesToUpload] = useState<FileList | null>(null);
     const [images, setImages] = useState<Array<ImageType>>([]);
     const [ad, setAd] = useState<EmptyAdType>(emptyAd);
@@ -86,7 +86,7 @@ const NewAd = () => {
     }, [openDialog]);
 
     const text =
-        <div>
+        <>
             The ads posted on the Flea Market are to be written in English only and contain:
             <br />
             – the ad title and the specific product(s) description. The description is to be complete and reliable, should not contain the contact details of the seller and links to the third-party resources. It is not allowed to advertise dissimilar products in one ad. The ad title should not contain prices, links to the third-party resources and any contact information;
@@ -98,7 +98,7 @@ const NewAd = () => {
             – the reliable information about the product(s) condition;
             <br />
             –  the reliable contact information that includes the e-mail. The e-mail is indicated in a special field while registering a profile. It is not allowed to indicate the e-mail in the ad text.
-        </div>;
+        </>;
 
     const setDefaultMainPictureId = () => {
         images.length && setMainPictureId(images[0].id)
@@ -281,7 +281,6 @@ const NewAd = () => {
 
     return (
         <div className="newAd_container">
-
             <Typography variant="h4">
                 Create a new Ad
             </Typography>
@@ -315,7 +314,10 @@ const NewAd = () => {
                     </label>
                 </CardActions>
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                    >
                         ...or drop them here.
                     </Typography>
                 </CardContent>
@@ -335,7 +337,10 @@ const NewAd = () => {
                                     >
                                         <DeleteIcon />
                                     </IconButton>
-                                    <Backdrop open={imageBeingRemoved === e.id} className="deleting_backdrop" >
+                                    <Backdrop
+                                        open={imageBeingRemoved === e.id}
+                                        className="deleting_backdrop"
+                                    >
                                         <CircularProgress className="deleting" />
                                     </Backdrop>
                                     <CardActionArea onClick={() =>
@@ -348,7 +353,6 @@ const NewAd = () => {
                                             id={e.id}
                                             alt={String(i)}
                                         />
-
                                     </CardActionArea>
                                 </Card>
                             </Tooltip>
@@ -358,7 +362,9 @@ const NewAd = () => {
                         let content = [];
                         for (let i = 0; i < imagesBeingUploaded; i++) {
                             content.push(
-                                <Card key={i} className={i === 0 && !imagesUploaded ? "first_loading_card" : "loading_card"}>
+                                <Card
+                                    key={i}
+                                    className={i === 0 && !imagesUploaded ? "first_loading_card" : "loading_card"}>
                                     <CircularProgress />
                                 </Card>
                             );
@@ -400,7 +406,10 @@ const NewAd = () => {
                             MenuProps={MenuProps}
                         >
                             {categories.map(e => (
-                                <MenuItem key={e.value} value={e.value}>
+                                <MenuItem
+                                    key={e.value}
+                                    value={e.value}
+                                >
                                     {e.label}
                                 </MenuItem>
                             ))}
@@ -428,7 +437,10 @@ const NewAd = () => {
                                     .find(e => e.value === ad.category)?.subCategories
                                     .map(e => {
                                         return (
-                                            <MenuItem key={e.value} value={e.value}>
+                                            <MenuItem
+                                                key={e.value}
+                                                value={e.value}
+                                            >
                                                 {e.label}
                                             </MenuItem>
                                         )
@@ -512,13 +524,15 @@ const NewAd = () => {
                                 value={ad.city}
                                 onChange={e => setAd({ ...ad, city: e.target.value })}
                                 MenuProps={MenuProps}
-
                             >
                                 {regions
                                     .find(e => e.value === ad.region)?.cities
                                     .map(e => {
                                         return (
-                                            <MenuItem key={e.value} value={e.value}>
+                                            <MenuItem
+                                                key={e.value}
+                                                value={e.value}
+                                            >
                                                 {e.label}
                                             </MenuItem>
                                         )
@@ -548,7 +562,7 @@ const NewAd = () => {
                     // required
                     label="Email"
                     variant="outlined"
-                    value = {ad.sellerEmail}
+                    value={ad.sellerEmail}
                     placeholder="E. g. John Doe"
                     disabled
                     className="form_row"
@@ -568,7 +582,10 @@ const NewAd = () => {
                     Attention!
                 </CardActions>
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                    >
                         {text}
                     </Typography>
                 </CardContent>
@@ -579,14 +596,18 @@ const NewAd = () => {
                 onClose={closeDialog}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>Congratulations!</DialogTitle>
+                <DialogTitle>
+                    Congratulations!
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
                         Your Ad was successfully created!
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={closeDialog}>OK</Button>
+                    <Button onClick={closeDialog}>
+                        OK
+                    </Button>
                 </DialogActions>
             </Dialog>
             <Backdrop
