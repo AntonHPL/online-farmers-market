@@ -1,15 +1,14 @@
 import { useState, useContext, FC, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Menu, MenuItem, Badge, Toolbar, Box, Button, IconButton, Dialog, DialogTitle, DialogContent } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { AppBar, Menu, MenuItem, Badge, Toolbar, Box, Button, IconButton, Dialog, DialogTitle, DialogContent, Backdrop, CircularProgress } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 // import MailIcon from "@mui/icons-material/Mail";
 // import NotificationsIcon from "@mui/icons-material/Notifications";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-import Login from "./Login";
-import Authorization from "./Authorization";
+import LogInForm from "./LogInForm";
+import SignUpForm from "./SignUpForm";
 import { useEffect } from "react";
 import logo from "../images/logo.png";
 
@@ -21,6 +20,7 @@ const Header: FC = () => {
   // const [menu, setMenu] = useState(null);
   const [signUpDialog, setSignUpDialog] = useState({ open: false });
   const [accountImage, setAccountImage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const isMenuOpen = !!anchorEl;
   // const isMobileMenuOpen = !!mobileMoreAnchorEl;
@@ -28,7 +28,6 @@ const Header: FC = () => {
   const navigate = useNavigate();
 
   const openMenu = (e: MouseEvent<HTMLButtonElement>): void => setAnchorEl(e.currentTarget);
-  console.log("look", anchorEl);
   const handleMobileMenuClose = (): void => {
     setMobileMoreAnchorEl(null);
   };
@@ -169,15 +168,6 @@ const Header: FC = () => {
     <Box sx={{ flexGrow: 1, zIndex: 10 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <div
             className="logo_container"
             onClick={() => window.location.href = "/"}
@@ -193,7 +183,10 @@ const Header: FC = () => {
               size="large"
               aria-label="new_advertisement"
               color="inherit"
-              onClick={() => navigate("/new-advertisement")}
+              onClick={() => user ?
+                navigate("/new-advertisement") :
+                setLogInDialog({ open: true })
+              }
             >
               <AddCircleOutlineIcon />
             </IconButton>
@@ -206,15 +199,9 @@ const Header: FC = () => {
                 onClick={openMenu}
                 color="inherit"
                 endIcon={
-                  <Badge
-                    badgeContent={17}
-                    max={9}
-                    color="error"
-                  >
-                    <div className="account_image">
-                      <img src={`data:image/png;base64,${accountImage}`} />
-                    </div>
-                  </Badge>
+                  <div className="account_image">
+                    <img src={`data:image/png;base64,${accountImage}`} />
+                  </div>
                 }
                 className="profile_button"
               >
@@ -254,7 +241,7 @@ const Header: FC = () => {
         keepMounted
         onClose={closeDialog}
         aria-describedby="alert-dialog-slide-description"
-        className="sign-up_dialog"
+        className="sign-up-dialog"
       >
         <DialogTitle>
           {signUpDialog.open ?
@@ -262,12 +249,18 @@ const Header: FC = () => {
             "Log in"
           }
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className="dialog-content">
           {signUpDialog.open ?
-            <Authorization /> :
-            <Login setSignUpDialog={setSignUpDialog} />
+            <SignUpForm setLoading={setLoading} /> :
+            <LogInForm isOpen={logInDialog.open} setSignUpDialog={setSignUpDialog} setLoading={setLoading} />
           }
         </DialogContent>
+        <Backdrop
+          open={loading}
+          className="backdrop"
+        >
+          <CircularProgress />
+        </Backdrop>
       </Dialog>
     </Box>
   );

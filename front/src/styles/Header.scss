@@ -1,15 +1,22 @@
-.sign-up_dialog {
-  .MuiPaper-root {
+.sign-up-dialog {
+  h2 {
+    @include indents($padding: 16px 24px 8px);
+  }
+  .dialog-content {
+    padding-top: 8px !important;
+  }
+  .MuiDialog-paper {
     @include size(500px);
   }
 
   form {
     @include size(100%);
   }
+}
 
-  .log-in_link {
-    cursor: pointer;
-  }
+.backdrop {
+  @include absolute();
+  @include size(100% !important, 100% !important);
 }
 
 .profile_button {

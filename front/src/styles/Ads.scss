@@ -1,31 +1,27 @@
-.ads_container {
-  @include flex_options($justify_content: space-between);
+.ads-container {
+  @include flex-options($justify_content: space-between);
   @include indents($padding: 16px 24px 16px 8px);
   min-height: calc(100vh - 64px);
   background-color: $secondary_bright;
-  @include border_box();
+  @include border-box();
 
   .main {
     @include size(calc(100% - 360px - 8px));
     @include indents(0 0 0 8px);
 
-    .sorting_and_search {
-      @include flex_options($justify_content: space-between);
-      @include indents(0 0 8px);
+    .sorting-and-search {
+      @include flex-options($justify_content: space-between);
+      @include standard-margin-bottom();
 
       .sorting {
         @include indents(0 !important, 0 !important);
         @include size(200px);
-
-        .MuiPaper-root {
-          @include indents(50px !important);
-        }
       }
 
       .search {
         @include size(calc(100% - 216px), 40px !important);
 
-        .MuiInput-root {
+        >div {
           @include size($height: 100% !important);
         }
       }
@@ -36,19 +32,19 @@
 
       .skeleton {
         @include size(100%, 180px);
-        @include indents(0 0 8px);
+        @include standard-margin-bottom();
         border-radius: 4px;
       }
 
       .card {
-        @include flex_options($isImportant:  !important);
-        @include indents(0 0 8px);
+        @include flex-options($isImportant:  !important);
+        @include standard-margin-bottom();
         user-select: none;
 
-        .card_action_area {
+        .card-action-area {
           @include size(200px !important, 180px !important);
           background-color: $primary_bright;
-          @include flex_options($justify_content: center);
+          @include flex-options($justify_content: center);
           border-radius: 4px;
           @include indents($padding: 1px);
 
@@ -58,14 +54,19 @@
             border-radius: 4px;
             pointer-events: none;
           }
+
+          svg {
+            @include size(50%, 50%);
+            align-self: center;
+          }
         }
 
-        .card_content {
-          @include flex_options(column, space-between, $isImportant:  !important);
+        .card-content {
+          @include flex-options(column, space-between, $isImportant:  !important);
           @include size(425px);
-          @include border_box();
+          @include border-box();
 
-          .product_title:hover {
+          .product-title:hover {
             cursor: pointer;
             color: $primary_main;
             transition: all .2s ease-in-out;
@@ -73,20 +74,21 @@
           }
         }
 
-        .card_actions {
-          @include flex_options($justify_content: flex-end, $align_items: flex-end);
+        .card-actions {
+          @include flex-options($justify_content: flex-end, $align_items: flex-end);
           @include size(calc(100% - 625px));
-          @include border_box();
+          @include border-box();
         }
       }
 
       .plug {
-        @include flex_options(column, center, center);
+        @include flex-options(column, center, center);
         @include size(100%, calc(100vh - 64px - 40px - 8px - 8px));
       }
     }
+
     nav {
-      @include flex_center();
+      @include flex-center();
       @include indents(16px 0 0)
     }
   }

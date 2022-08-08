@@ -11,6 +11,7 @@ const defaultUserContext: UserContextInterface = {
     setTokenValidation: emptyFunction,
     isAccountImageChanged: false,
     setIsAccountImageChanged: emptyFunction,
+    isTokenValidationComplete: false,
 }
 export const UserContext = createContext<UserContextInterface>(defaultUserContext);
 export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
@@ -18,6 +19,7 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
     const [tokenValidation, setTokenValidation] = useState(true);
     const [logInDialog, setLogInDialog] = useState({ open: false });
     const [isAccountImageChanged, setIsAccountImageChanged] = useState(false);
+    const [isTokenValidationComplete, setIsTokenValidationComplete] = useState(false);
 
     useEffect(() => {
         tokenValidation &&
@@ -27,17 +29,17 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
                     if (data.user) {
                         axios
                             .get(`/api/user/${data.user.id}`)
-                            .then(res => setUser(res.data[0]))
+                            .then(res => {
+                                setUser(res.data[0]);
+                                setIsTokenValidationComplete(true);
+                            })
                     } else {
-                        setLogInDialog({ open: true })
+                        setLogInDialog({ open: true });
+                        setIsTokenValidationComplete(true);
                     }
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.error(error));
     }, [tokenValidation, isAccountImageChanged]);
-
-    useEffect(() => {
-        console.log("user changed in context")
-    }, [user]);
 
     const value = {
         user,
@@ -47,6 +49,7 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
         setTokenValidation,
         isAccountImageChanged,
         setIsAccountImageChanged,
+        isTokenValidationComplete,
     }
     return (
         <UserContext.Provider value={value}>

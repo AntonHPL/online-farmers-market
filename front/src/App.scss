@@ -2,10 +2,10 @@
 @import "./styles/mixins/mixins.scss";
 
 @import "./styles/Ads.scss";
-@import "./styles/Authorization.scss";
+@import "./styles/SignUpForm.scss";
 @import "./styles/Captcha.scss";
 @import "./styles/Header.scss";
-@import "./styles/Login.scss";
+@import "./styles/LogInForm.scss";
 @import "./styles/NewAd.scss";
 @import "./styles/Profile.scss";
 @import "./styles/Chats.scss";
@@ -42,11 +42,6 @@ form {
   }
 }
 
-.form_row {
-  @include flex_options($justify_content: space-between, $wrap: wrap);
-  @include indents(5px 0 !important);
-}
-
 .deleting,
 .loading {
   @include absolute();
@@ -55,7 +50,7 @@ form {
 
 h4 {
   @include size(700px);
-  @include indents($padding: 20px 0 !important);
+  @include indents($padding: 16px 0 !important);
   // @include border(red, 4px);
 }
 
@@ -63,17 +58,13 @@ h5 {
   @include indents(10px 0 !important);
 }
 
-.submitButton {
-  @include indents(5px 0 !important);
-}
-
 .css-18lvne8-MuiList-root {
   @include indents($padding: 0 !important);
 }
 
-.prompt {
-  @include indents(5px 0 0);
-}
+// .prompt {
+//   @include indents(5px 0 0);
+// }
 
 a {
   cursor: pointer;

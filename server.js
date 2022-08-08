@@ -8,8 +8,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const chalk = require("chalk");
-const Chat = require("./models/chat");
-
 require("dotenv").config();
 
 const app = express();

@@ -1,4 +1,10 @@
-export interface AdType {
+import { RefObject } from "react";
+
+interface DialogInterface {
+  open: boolean,
+}
+
+export interface AdInterface {
   _id: string,
   images: Array<{ data: string }>,
   textInfo: {
@@ -16,113 +22,112 @@ export interface AdType {
   },
 };
 
-export interface GetAdsPropsType {
+export interface GetAdsPropsInterface {
   functionProps: {
-    page: number,
+    page: number | undefined,
     PER_PAGE: number,
-    sortingParams: Array<string>,
+    sortingParams: Array<string> | null,
     subString: string,
     category?: string,
     subCategory?: string,
   },
-  setAds: (ads: Array<AdType>) => void,
+  setAds: (ads: Array<AdInterface>) => void,
   setPageCount: (pageCount: number) => void,
-  setPage: (page: number) => void,
+  setAdsAmount: (adsAmount: number) => void,
   setAdsLoading: (loading: boolean) => void,
 };
 
-export interface MenuPropsType {
-  getAdsProps: GetAdsPropsType,
+export interface MenuPropsInterface {
+  getAdsProps: GetAdsPropsInterface,
   setSubString: (subString: string) => void,
   setCategory: (category: string) => void,
   setSubCategory: (subCategory: string) => void,
 };
 
-export interface EmptyAdType {
+export interface EmptyAdInterface {
   title: string,
   category: string,
   subCategory: string | null,
   description: string,
   region: string,
-  price: number,
+  price: number | string,
   city: string,
   sellerName: string,
   sellerEmail: string,
   sellerId: string,
 };
 
-interface CityType {
+interface CityInterface {
   value: string,
   label: string,
 };
 
-export interface RegionType {
-  cities: Array<CityType>,
+export interface RegionInterface {
+  cities: Array<CityInterface>,
   label: string,
   value: string,
 };
 
-interface SubCategoryType {
+interface SubCategoryInterface {
   label: string,
   value: string,
 };
 
-export interface CategoryType {
+export interface CategoryInterface {
   label: string,
-  subCategories: Array<SubCategoryType>,
+  subCategories: Array<SubCategoryInterface>,
   value: string,
 };
 
-export interface ImageType {
+export interface ImageInterface {
   contentType: string,
   data: string,
   id: string,
 };
 
-export interface DataCategoryType {
+export interface DataCategoryInterface {
   contents: Array<string>,
   title: string,
   _id: string,
 };
 
-export interface DataRegionType {
+export interface DataRegionInterface {
   cities: Array<string>,
   state: string,
   _id: string,
 };
 
-export interface DataMenuType {
+export interface DataMenuInterface {
   contents: Array<string>,
   title: string,
   _id: string,
 };
 
-interface ContentsType {
+interface ContentsInterface {
   text: string,
   selected: boolean,
 };
 
-export interface MenuType {
-  contents: Array<ContentsType>
+export interface MenuInterface {
+  contents: Array<ContentsInterface>
   open: boolean,
   selected: boolean,
   title: string,
   _id: string,
 };
 
-export interface InputsType {
+export interface SignUpFormInputsInterface {
   name: string,
   email: string,
   password: string,
 };
 
-export interface EmptyInputsType {
-  name: string,
+export interface LogInFormInputsInterface {
   email: string,
   password: string,
 };
 
-export interface MessageType {
+export interface MessageInterface {
   senderId: string,
   message: string,
   break?: string,
@@ -131,10 +136,10 @@ export interface MessageType {
 
 export type InterlocutorType = { id: string, name: string } | null;
 
-export interface ChatType {
+export interface ChatInterface {
   adId: string,
   creationDate: string,
-  messages: Array<MessageType>,
+  messages: Array<MessageInterface>,
   participants: Array<InterlocutorType>,
   _id: string,
 };
@@ -142,11 +147,12 @@ export interface ChatType {
 export interface UserContextInterface {
   user: UserType,
   setUser: (user: UserType) => void,
-  logInDialog: { open: boolean },
-  setLogInDialog: (logInDialog: { open: boolean }) => void,
+  logInDialog: DialogInterface,
+  setLogInDialog: (logInDialog: DialogInterface) => void,
   setTokenValidation: (tokenValidation: boolean) => void,
   isAccountImageChanged: boolean,
   setIsAccountImageChanged: (isAccountImageChanged: boolean) => void,
+  isTokenValidationComplete: boolean,
 };
 
 export type UserType = {
@@ -156,16 +162,16 @@ export type UserType = {
   image: { data: string },
 } | null;
 
-export interface BriefAdType {
+export interface BriefAdInterface {
   _id: string,
-  images: Array<ImageType>,
+  images: Array<ImageInterface>,
   textInfo: { title: string },
 }
 
-export interface ModifiedChatType {
+export interface ModifiedChatInterface {
   _id: string,
   myInterlocutor: InterlocutorType,
-  messages: Array<MessageType>,
+  messages: Array<MessageInterface>,
   creationDate: string,
   adId: string,
   adImage?: string,
@@ -173,7 +179,54 @@ export interface ModifiedChatType {
   sellerImage?: string,
 };
 
-export interface SellerType {
+export interface SellerInterface {
   _id: string,
   image: { data: string },
+  name: string,
+}
+
+export interface SuccessDialogPropsInterface extends DialogInterface {
+  closeDialog: () => void,
+}
+
+export interface FirstMessageDialogPropsInterface extends SuccessDialogPropsInterface {
+  seller: SellerInterface | null,
+  messageText: string,
+  setMessageText: (messageText: string) => void,
+  ad: AdInterface | null,
+  paramsId: string
+}
+
+export interface SortingOptionInterface {
+  value: string,
+  label: string,
+}
+
+export interface ErrorInterface {
+  field: string,
+  errorText: string,
+}
+
+export interface ErrorsInterface {
+  inputs: Array<ErrorInterface>,
+  reenteredPassword?: ErrorInterface,
+  captcha?: ErrorInterface,
+}
+
+export interface SignUpFormPropsInterface {
+  setLoading: (loading: boolean) => void,
+}
+
+export interface LogInFormPropsInterface extends SignUpFormPropsInterface {
+  isOpen: boolean,
+  setSignUpDialog: (signUpDialog: DialogInterface) => void,
+}
+
+export interface CaptchaPropsInterface {
+  captchaEntered: string,
+  setCaptchaEntered: (captchaEntered: string) => void,
+  setCaptchaCreated: (captchaCreated: string) => void,
+  errorFound: (field: string) => ErrorInterface | undefined,
+  resetErrors: (field: string) => void,
+  captchaReload: boolean,
 }

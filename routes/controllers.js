@@ -14,7 +14,7 @@ const getMenu = (req, res) => {
   Menu
     .find()
     .then(menu => res.status(200).json(menu))
-    .catch(error => console.log("Ops"));
+    .catch(error => console.error("Ops"));
 };
 
 const countAds = (req, res) => {
@@ -84,12 +84,13 @@ const postAd = (req, res) => {
       };
     }) || [],
     textInfo: req.body.ad || {},
+    price: req.body.price || 0,
     creationDate: req.body.creationDate,
   });
   ad
     .save()
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const addAccountImage = (req, res) => {
@@ -104,7 +105,7 @@ const addAccountImage = (req, res) => {
       }
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const getAccountImage = (req, res) => {
@@ -135,14 +136,14 @@ const addImages = (req, res) => {
       }
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const getImages = (req, res) => {
   Ad
     .find({ creationDate: req.params.creationDate }, { images: true })
     .then(images => res.status(200).json(images))
-    .catch(error => console.log("Ops"));
+    .catch(error => console.error("Ops"));
 };
 
 const getRegions = (req, res) => {
@@ -161,7 +162,7 @@ const deleteImage = (req, res) => {
       }
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const finishAd = (req, res) => {
@@ -184,7 +185,7 @@ const finishAd = (req, res) => {
       })
     )
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const signUp = (req, res) => {
@@ -208,7 +209,11 @@ const signUp = (req, res) => {
       return user.save()
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => {
+      error.name === "MongoServerError" ?
+        res.status(422).send("The Email is already registered.") :
+        console.error(error)
+    });
 
   const transporter = nodemailer.createTransport({
     // service: "gmail",
@@ -223,7 +228,7 @@ const signUp = (req, res) => {
     //   rejectUnauthorized: false,
     // }
   });
-  // console.log(req.headers)
+
   const mailOptions = {
     from: "Flea Market <antonhpl@mail.ru>",
     to: user.email,
@@ -237,14 +242,13 @@ const signUp = (req, res) => {
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
-    error ? console.log(error) :
+    error ? console.error(error) :
       console.log(`Verification email was sent to ${user.email}`)
   })
 };
 
 const verifyEmail = (req, res) => {
   const token = req.query.token;
-  // console.log(token)
   User
     .findOne({ emailToken: token })
     .then(user => {
@@ -253,14 +257,13 @@ const verifyEmail = (req, res) => {
       return user.save();
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error))
+    .catch(error => console.error(error))
 };
 
 const logIn = (req, res) => {
   const { email, password, cookieAge } = req.body;
   const throwError = (res) => res.status(500).send({ message: "The credentials are incorrect. Please try again." });
   let userFound;
-
   User
     .findOne({ email: email })
     .then(user => {
@@ -310,7 +313,10 @@ const postChat = (req, res) => {
     creationDate: req.body.creationDate,
     adId: req.body.adId,
   });
-  chat.save().then(() => res.json("OK")).catch(error => console.log(error));
+  chat
+    .save()
+    .then(() => res.json("OK"))
+    .catch(error => console.error(error));
 };
 
 const getUser = (req, res) => {
@@ -319,14 +325,14 @@ const getUser = (req, res) => {
     .then(user => {
       res.json(user)
     })
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const getChats = (req, res) => {
   Chat
     .find({ "participants.id": req.params.userId })
     .then(chats => res.json(chats))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const addMessages = (req, res) => {
@@ -339,7 +345,7 @@ const addMessages = (req, res) => {
       },
     })
     .then(() => res.json("Ok"))
-    .catch(error => console.log(error));
+    .catch(error => console.error(error));
 };
 
 const getAd = (req, res) => {
@@ -349,7 +355,6 @@ const getAd = (req, res) => {
 };
 
 const getAdsBriefly = (req, res) => {
-  // console.log("ha", req.query.adsIds)
   Ad
     .find(
       { _id: { $in: JSON.parse(req.query.adsIds) } },
@@ -372,8 +377,8 @@ const getSellers = (req, res) => {
 
 const getSeller = (req, res) => {
   User
-    .find({ _id: req.params.id }, { name: true, "image.data": true })
-    .then(user => res.json(user));
+    .find({ _id: req.params.id }, { image: true, name: true })
+    .then(seller => res.json(seller));
 };
 
 const determineChatExistence = (req, res) => {

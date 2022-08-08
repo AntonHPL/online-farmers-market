@@ -10,11 +10,11 @@ import {
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import axios from "axios";
 import { getAds } from "../functions/functions";
-import { MenuPropsType, DataMenuType, MenuType } from '../types';
+import { MenuPropsInterface, DataMenuInterface, MenuInterface } from '../types';
 
-const Menu: FC<MenuPropsType> = ({ getAdsProps, setSubString, setCategory, setSubCategory }) => {
-  const [stableItems, setStableItems] = useState<Array<MenuType>>([]);
-  const [listItems, setListItems] = useState<Array<MenuType>>([]);
+const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, setSubCategory }) => {
+  const [stableItems, setStableItems] = useState<Array<MenuInterface>>([]);
+  const [listItems, setListItems] = useState<Array<MenuInterface>>([]);
   const [menuLoading, setMenuLoading] = useState(false);
 
   const { subString, category } = getAdsProps.functionProps;
@@ -23,7 +23,7 @@ const Menu: FC<MenuPropsType> = ({ getAdsProps, setSubString, setCategory, setSu
     setMenuLoading(true);
     axios.get("/api/menu")
       .then(({ data }) => {
-        const items = data.map((e: DataMenuType): MenuType => {
+        const items = data.map((e: DataMenuInterface): MenuInterface => {
           return {
             ...e,
             contents: e.contents.map(el => {

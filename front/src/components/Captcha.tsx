@@ -1,15 +1,20 @@
 import { useState, useEffect, useRef, FC } from "react";
-import { TextField, IconButton } from "@mui/material"
+import { TextField, IconButton } from "@mui/material";
+import { CaptchaPropsInterface } from "../types";
 import ReplayIcon from "@mui/icons-material/Replay";
 
-const Captcha: FC<{ validation: boolean }> = ({ validation }) => {
-    const [captchaCreated, setCaptchaCreated] = useState("");
-    const [captchaEntered, setCaptchaEntered] = useState("");
-
+const Captcha: FC<CaptchaPropsInterface> = ({
+    captchaEntered,
+    setCaptchaEntered,
+    setCaptchaCreated,
+    errorFound,
+    resetErrors,
+    captchaReload
+}) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
     const getCaptcha = (): void => {
         if (canvasRef.current) {
+            setCaptchaEntered("");
             const pen = canvasRef.current.getContext("2d");
             let captcha = Math.random().toString(36).substring(2, 10);
             const maxLength = captcha.length;
@@ -27,7 +32,7 @@ const Captcha: FC<{ validation: boolean }> = ({ validation }) => {
             if (pen) {
                 pen.font = "24px Georgia";
                 pen.fillStyle = "grey";
-                pen.fillRect(0, 0, 177, 40);
+                pen.fillRect(0, 0, 180, 40);
                 pen.fillStyle = "orange";
                 pen.fillText(captcha, 15, 30);
             };
@@ -36,28 +41,15 @@ const Captcha: FC<{ validation: boolean }> = ({ validation }) => {
 
     useEffect(() => {
         getCaptcha();
-    }, []);
-
-    useEffect(() => {
-        if (validation) {
-            if (captchaEntered === captchaCreated) {
-                alert("Correct");
-                getCaptcha();
-                setCaptchaEntered("");
-            } else {
-                alert("Incorrect");
-                getCaptcha();
-            }
-        };
-    }, [validation]);
+    }, [captchaReload]);
 
     return (
-        <div className="captcha_container">
-            <div className="half-width_field">
+        <div className="captcha-container">
+            <div className="half-width-field">
                 <canvas
                     ref={canvasRef}
                     height={40}
-                    width={221 - 34 - 10}
+                    width={180}
                 >
                 </canvas>
                 <IconButton
@@ -67,14 +59,19 @@ const Captcha: FC<{ validation: boolean }> = ({ validation }) => {
                     <ReplayIcon />
                 </IconButton>
             </div>
-            <div className="half-width_field">
+            <div className="half-width-field">
                 <TextField
+                    autoComplete="off"
                     type="text"
-                    // size={30}
                     size="small"
-                    onChange={e => setCaptchaEntered(e.target.value)}
+                    error={!!errorFound("captcha")}
+                    onChange={e => {
+                        resetErrors("captcha");
+                        setCaptchaEntered(e.target.value)
+                    }}
                     value={captchaEntered}
-                    placeholder="Enter the Captcha"
+                    placeholder="Enter the Captcha..."
+                    helperText={errorFound("captcha")?.errorText}
                 />
             </div>
         </div>

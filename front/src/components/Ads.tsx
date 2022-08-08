@@ -2,7 +2,6 @@ import { useState, useEffect, FC } from 'react';
 import Menu from "./Menu";
 import { getAds } from "../functions/functions";
 import { useNavigate } from 'react-router-dom';
-
 import {
   Button,
   Card,
@@ -10,7 +9,6 @@ import {
   CardMedia,
   Skeleton,
   CardContent,
-  CircularProgress,
   Typography,
   TextField,
   InputAdornment,
@@ -23,24 +21,24 @@ import {
   Pagination,
 } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
-import { SearchOff } from '@mui/icons-material';
-import { AdType, GetAdsPropsType } from '../types';
+import { SearchOff, NoPhotography } from '@mui/icons-material';
+import { AdInterface, GetAdsPropsInterface, SortingOptionInterface } from '../types';
 
 const Ads: FC = () => {
-  const [ads, setAds] = useState<Array<AdType>>([]);
-  const [sortingParams, setSortingParams] = useState<Array<string>>([]);
+  const [ads, setAds] = useState<Array<AdInterface> | null>(null);
+  const [sortingParams, setSortingParams] = useState<Array<string> | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [adsLoading, setAdsLoading] = useState(false);
   const PER_PAGE = 3;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number | undefined>(undefined);
   const [subString, setSubString] = useState("");
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
+  const [adsAmount, setAdsAmount] = useState(0);
   const navigate = useNavigate();
   const renderParticularAd = (id: string): void => navigate(`/ad/${id}`);
-  // const { user } = useContext(UserContext);
-
-  const getAdsProps: GetAdsPropsType = {
+  const defaultPage = 1;
+  let getAdsProps: GetAdsPropsInterface = {
     functionProps: {
       page,
       PER_PAGE,
@@ -51,31 +49,33 @@ const Ads: FC = () => {
     },
     setAds,
     setPageCount,
-    setPage,
+    setAdsAmount,
     setAdsLoading,
   };
 
   const changePage = (page: number): void => {
     setPage(page);
-    getAds(getAdsProps);
   };
 
   useEffect(() => {
-    console.log("changed!!!!!!")
-    const defaultPage = 1;
-    setPage(defaultPage);
-    getAds({ ...getAdsProps, functionProps: { ...getAdsProps.functionProps, page: defaultPage } });
-  }, [sortingParams, subString, category, subCategory]);
+    page && getAds(getAdsProps);
+  }, [page]);
 
-  const sortingOptions = [
+  useEffect(() => {
+    page !== defaultPage && setPage(defaultPage);
+    getAdsProps = { ...getAdsProps, functionProps: { ...getAdsProps.functionProps, page: defaultPage } };
+    page === defaultPage && getAds(getAdsProps);
+  }, [sortingParams, category, subCategory]);
+
+  const sortingOptions: Array<SortingOptionInterface> = [
     { value: "price_asc", label: "Price: lowest first" },
     { value: "price_desc", label: "Price: highest first" },
     { value: "creationDate_desc", label: "Date: newest first" },
     { value: "creationDate_asc", label: "Date: oldest first" },
   ];
-console.log("category:", category, "subcategory:", subCategory, "substring: ", subString);
+
   return (
-    <div className="ads_container">
+    <div className="ads-container">
       <Menu
         getAdsProps={getAdsProps}
         setSubString={setSubString}
@@ -83,11 +83,10 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
         setSubCategory={setSubCategory}
       />
       <div className="main">
-        <div className="sorting_and_search">
+        <div className="sorting-and-search">
           <FormControl
             className="sorting"
             size="small"
-            style={{ margin: "10px" }}
           >
             <InputLabel id="sorting-select">
               Sorting
@@ -96,7 +95,6 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
               labelId="sorting-select"
               id="demo-simple-select"
               label="Sorting"
-              // value={age}
               defaultValue={"creationDate_desc"}
               onChange={e => {
                 setSortingParams(e.target.value.split("_"));
@@ -130,6 +128,9 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
             autoComplete="off"
             className="search"
           />
+          <div>
+            {adsAmount}
+          </div>
         </div>
         <div className="ads">
           {adsLoading ?
@@ -145,27 +146,30 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
               };
               return content;
             }() :
-            ads.map(el => (
+            ads?.map(el => (
               <Card className="card">
                 <CardActionArea
-                  className="card_action_area"
+                  className="card-action-area"
                   onClick={() => renderParticularAd(el._id)}
                 >
-                  <CardMedia
-                    component="img"
-                    alt="1"
-                    // height="140"
-                    image={`data:image/png;base64,${el.images.length && el.images[0].data}`}
-                  />
+                  {el.images.length && el.images[0].data ?
+                    <CardMedia
+                      component="img"
+                      alt="1"
+                      // height="140"
+                      image={`data:image/png;base64,${el.images[0].data}`}
+                    /> :
+                    <NoPhotography />
+                  }
                 </CardActionArea>
-                <CardContent className="card_content">
+                <CardContent className="card-content">
                   <>
                     <Typography
                       gutterBottom
                       variant="h5"
                       component="div"
                       onClick={() => renderParticularAd(el._id)}
-                      className="product_title"
+                      className="product-title"
                     >
                       {el.textInfo.title}
                     </Typography>
@@ -180,10 +184,10 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
                   <Typography variant="body2">
                     {el.textInfo.category}, {el.textInfo.subCategory}
                     <br />
-                    By {el.textInfo.name} from {el.textInfo.region}, {el.textInfo.city}
+                    By {el.textInfo.sellerName} from {el.textInfo.region}, {el.textInfo.city}
                   </Typography>
                 </CardContent>
-                <CardActions className="card_actions">
+                <CardActions className="card-actions">
                   {/* <Button size="small">Share</Button> */}
                   <Button size="large">
                     Learn more...
@@ -192,7 +196,7 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
               </Card>
             ))
           }
-          {!ads.length &&
+          {!ads &&
             <div className="plug">
               <SearchOff fontSize="large" />
               <Typography variant="body1">
@@ -209,7 +213,8 @@ console.log("category:", category, "subcategory:", subCategory, "substring: ", s
             color="primary"
             size="large"
             onChange={(_, page) => changePage(page)}
-            page = {page}
+            page={page}
+            disabled={adsLoading}
           />
         }
       </div>

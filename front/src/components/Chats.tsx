@@ -4,17 +4,17 @@ import { AccountCircle, Send } from "@mui/icons-material";
 import { useEffect } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-import { MessageType, ChatType, BriefAdType, ModifiedChatType, SellerType } from "../types";
+import { MessageInterface, ChatInterface, BriefAdInterface, ModifiedChatInterface, SellerInterface } from "../types";
 
 const Chats: FC = () => {
-	const [oldMessages, setOldMessages] = useState<Array<MessageType>>([]);
-	const [newMessages, setNewMessages] = useState<Array<MessageType>>([]);
-	const [allMessages, setAllMessages] = useState<Array<MessageType>>([]);
+	const [oldMessages, setOldMessages] = useState<Array<MessageInterface>>([]);
+	const [newMessages, setNewMessages] = useState<Array<MessageInterface>>([]);
+	const [allMessages, setAllMessages] = useState<Array<MessageInterface>>([]);
 	const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
 	const [message, setMessage] = useState("");
 	const [chatId, setChatId] = useState<string>("");
-	const [chatsData, setChatsData] = useState<Array<ChatType>>([]);
-	const [chats, setChats] = useState<Array<ModifiedChatType>>([]);
+	const [chatsData, setChatsData] = useState<Array<ChatInterface>>([]);
+	const [chats, setChats] = useState<Array<ModifiedChatInterface>>([]);
 	const [myId, setMyId] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [isChatChosen, setIsChatChosen] = useState(false);
@@ -26,8 +26,6 @@ const Chats: FC = () => {
 		ws.onmessage = message => setNewMessages(prev => [...prev, JSON.parse(message.data)]);
 		setWebSocket(ws);
 	}, []);
-
-	console.log("oldMessages", oldMessages);
 
 	useEffect(() => {
 		user && setMyId(user._id)
@@ -51,7 +49,7 @@ const Chats: FC = () => {
 
 	useEffect(() => {
 		if (chatsData.length) {
-			const modifiedChatsData: Array<ModifiedChatType> = chatsData.map(chatData => {
+			const modifiedChatsData: Array<ModifiedChatInterface> = chatsData.map(chatData => {
 				return {
 					_id: chatData._id,
 					myInterlocutor: chatData.participants.find(participant => participant?.id !== myId) || null,
@@ -66,7 +64,7 @@ const Chats: FC = () => {
 				})
 				.then(({ data }) => {
 					modifiedChatsData.map((chat, i) => {
-						data.map((ad: BriefAdType): void => {
+						data.map((ad: BriefAdInterface): void => {
 							if (chat.adId === ad._id) {
 								modifiedChatsData[i] = {
 									...chat,
@@ -88,7 +86,7 @@ const Chats: FC = () => {
 				})
 				.then(({ data }) => {
 					modifiedChatsData.map((chat, i) => {
-						data.map((seller: SellerType) => {
+						data.map((seller: SellerInterface) => {
 							if (chat.myInterlocutor?.id === seller._id) {
 								modifiedChatsData[i] = {
 									...chat,
@@ -106,7 +104,6 @@ const Chats: FC = () => {
 		const adIdSelected = localStorage.getItem("ad-id_selected")
 		adIdSelected && chats.length && revealHistory(adIdSelected);
 	}, [chats]);
-	console.log("chats", chats);
 
 	const send = (e: FormEvent): void => {
 		e.preventDefault();
@@ -123,7 +120,6 @@ const Chats: FC = () => {
 	};
 
 	useEffect(() => {
-		console.log("www")
 		if (oldMessages.length) {
 			const arr = oldMessages.concat(newMessages);
 			let date = new Date(arr[0].creationDate || "").toLocaleDateString();
