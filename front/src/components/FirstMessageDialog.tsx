@@ -3,6 +3,7 @@ import { Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText, T
 import { FirstMessageDialogPropsInterface } from '../types';
 import axios from 'axios';
 import { UserContext } from './UserContext';
+import { AccountCircle } from '@mui/icons-material';
 
 const FirstMessageDialog: FC<FirstMessageDialogPropsInterface> = ({
   open,
@@ -40,7 +41,10 @@ const FirstMessageDialog: FC<FirstMessageDialogPropsInterface> = ({
         {seller &&
           <div className="seller_info">
             <div className="seller-account_image">
-              <img src={`data:image/png;base64,${seller.image.data}`} />
+              {seller.image ?
+                <img src={`data:image/png;base64,${seller.image.data}`} /> :
+                <AccountCircle />
+              }
             </div>
             {seller.name}
           </div>

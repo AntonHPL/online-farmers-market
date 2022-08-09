@@ -13,7 +13,6 @@ import {
   TextField,
   InputAdornment,
   CardActionArea,
-  Backdrop,
   FormControl,
   InputLabel,
   Select,
@@ -126,11 +125,13 @@ const Ads: FC = () => {
             value={subString}
             onKeyDown={e => e.code === "Enter" && getAds(getAdsProps)}
             autoComplete="off"
-            className="search"
+            className={`search${ads ? "-compressed" : ""}`}
           />
-          <div>
-            {adsAmount}
-          </div>
+          {ads &&
+            <div className="ads-amount">
+              {adsAmount} {adsAmount === 1 ? "ad" : "ads"} found
+            </div>
+          }
         </div>
         <div className="ads">
           {adsLoading ?
@@ -178,7 +179,7 @@ const Ads: FC = () => {
                       variant="h6"
                       component="div"
                     >
-                      USD {el.textInfo.price}
+                      {el.textInfo.price ? `$${el.textInfo.price}` : "For free"}
                     </Typography>
                   </>
                   <Typography variant="body2">

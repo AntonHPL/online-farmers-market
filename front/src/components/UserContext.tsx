@@ -6,8 +6,8 @@ const emptyFunction = (): void => { };
 const defaultUserContext: UserContextInterface = {
     user: { _id: "", name: "", email: "", image: { data: "" } },
     setUser: emptyFunction,
-    logInDialog: { open: false },
-    setLogInDialog: emptyFunction,
+    isLogInDialogOpen: false,
+    setIsLogInDialogOpen: emptyFunction,
     setTokenValidation: emptyFunction,
     isAccountImageChanged: false,
     setIsAccountImageChanged: emptyFunction,
@@ -17,7 +17,7 @@ export const UserContext = createContext<UserContextInterface>(defaultUserContex
 export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<UserType | null>(null);
     const [tokenValidation, setTokenValidation] = useState(true);
-    const [logInDialog, setLogInDialog] = useState({ open: false });
+    const [isLogInDialogOpen, setIsLogInDialogOpen] = useState(false);
     const [isAccountImageChanged, setIsAccountImageChanged] = useState(false);
     const [isTokenValidationComplete, setIsTokenValidationComplete] = useState(false);
 
@@ -34,7 +34,7 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
                                 setIsTokenValidationComplete(true);
                             })
                     } else {
-                        setLogInDialog({ open: true });
+                        setIsLogInDialogOpen(true);
                         setIsTokenValidationComplete(true);
                     }
                 })
@@ -44,8 +44,8 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
     const value = {
         user,
         setUser,
-        logInDialog,
-        setLogInDialog,
+        isLogInDialogOpen,
+        setIsLogInDialogOpen,
         setTokenValidation,
         isAccountImageChanged,
         setIsAccountImageChanged,

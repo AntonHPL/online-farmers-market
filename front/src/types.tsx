@@ -1,9 +1,10 @@
-import { RefObject } from "react";
-
 interface DialogInterface {
   open: boolean,
 }
 
+export interface ImageSliderPropsInterface {
+  ad: AdInterface | null,
+}
 export interface AdInterface {
   _id: string,
   images: Array<{ data: string }>,
@@ -20,6 +21,7 @@ export interface AdInterface {
     sellerEmail: string,
     sellerId: string,
   },
+  creationDate: string
 };
 
 export interface GetAdsPropsInterface {
@@ -147,8 +149,8 @@ export interface ChatInterface {
 export interface UserContextInterface {
   user: UserType,
   setUser: (user: UserType) => void,
-  logInDialog: DialogInterface,
-  setLogInDialog: (logInDialog: DialogInterface) => void,
+  isLogInDialogOpen: boolean,
+  setIsLogInDialogOpen: (isLogInDialogOpen: boolean) => void,
   setTokenValidation: (tokenValidation: boolean) => void,
   isAccountImageChanged: boolean,
   setIsAccountImageChanged: (isAccountImageChanged: boolean) => void,
@@ -183,6 +185,7 @@ export interface SellerInterface {
   _id: string,
   image: { data: string },
   name: string,
+  registrationDate: string,
 }
 
 export interface SuccessDialogPropsInterface extends DialogInterface {
@@ -219,7 +222,7 @@ export interface SignUpFormPropsInterface {
 
 export interface LogInFormPropsInterface extends SignUpFormPropsInterface {
   isOpen: boolean,
-  setSignUpDialog: (signUpDialog: DialogInterface) => void,
+  setIsSignUpDialogOpen: (isSignUpDialogOpen: boolean) => void,
 }
 
 export interface CaptchaPropsInterface {

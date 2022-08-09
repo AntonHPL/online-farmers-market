@@ -1,4 +1,5 @@
 .ads-container {
+  user-select: none;
   @include flex-options($justify_content: space-between);
   @include indents($padding: 16px 24px 16px 8px);
   min-height: calc(100vh - 64px);
@@ -20,10 +21,26 @@
 
       .search {
         @include size(calc(100% - 216px), 40px !important);
+      }
 
+      .search-compressed {
+        @include size(calc(100% - 336px), 40px !important);
+      }
+
+      .search,
+      .search-compressed {
         >div {
           @include size($height: 100% !important);
         }
+      }
+
+      .ads-amount {
+        @include size(120px);
+        @include flex_center();
+        @include border($primary-dark, 4px);
+        background: $primary-dark;
+        color: #fff;
+        @include border_box();
       }
     }
 
@@ -37,9 +54,8 @@
       }
 
       .card {
-        @include flex-options($isImportant:  !important);
+        @include flex-options($isImportant: !important);
         @include standard-margin-bottom();
-        user-select: none;
 
         .card-action-area {
           @include size(200px !important, 180px !important);

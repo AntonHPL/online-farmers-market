@@ -1,6 +1,5 @@
-import { useState, useEffect, FC } from "react";
+import { useState, useEffect, FC, MouseEvent } from "react";
 import {
-  ListSubheader,
   List,
   ListItemButton,
   ListItemText,
@@ -9,7 +8,6 @@ import {
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import axios from "axios";
-import { getAds } from "../functions/functions";
 import { MenuPropsInterface, DataMenuInterface, MenuInterface } from '../types';
 
 const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, setSubCategory }) => {
@@ -17,7 +15,7 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
   const [listItems, setListItems] = useState<Array<MenuInterface>>([]);
   const [menuLoading, setMenuLoading] = useState(false);
 
-  const { subString, category } = getAdsProps.functionProps;
+  const { subString, category, subCategory } = getAdsProps.functionProps;
 
   useEffect(() => {
     setMenuLoading(true);
@@ -42,6 +40,46 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
       });
   }, []);
 
+  const onItemClick = (e: MouseEvent<HTMLDivElement>) => {
+    subCategory && setSubCategory("");
+    const target = e.target as HTMLDivElement;
+    const innerText = target.innerText;
+    setListItems(stableItems.map(stableItem => {
+      const condition = stableItem.title === innerText;
+      return {
+        ...stableItem,
+        open: condition ? true : false,
+        selected: condition ? true : false,
+      };
+    }));
+    subString !== "" && setSubString("");
+    setCategory(innerText);
+  }
+
+  const onSubItemClick = (e: MouseEvent<HTMLDivElement>) => {
+    category && setCategory("");
+    const target = e.target as HTMLDivElement;
+    const innerText = target.innerText;
+    setListItems(
+      stableItems.map(stableItem => {
+        return {
+          ...stableItem,
+          open: stableItem.contents
+            .map(el => el.text)
+            .includes(innerText) && true,
+          contents: stableItem.contents
+            .map(stableSubItem => {
+              return {
+                ...stableSubItem,
+                selected: stableSubItem.text === innerText && true,
+              };
+            }),
+        };
+      })
+    );
+    setSubCategory(innerText);
+  }
+
   return (
     <div className="menu_container">
       {menuLoading ?
@@ -53,30 +91,12 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
           sx={{ width: "100%", maxWidth: 360, bgcolor: "inherit" }}
           component="nav"
           aria-labelledby="nested-list-subheader"
-        // subheader={
-        //   <ListSubheader component="div" id="nested-list-subheader">
-        //     Nested List Items
-        //   </ListSubheader>
-        // }
         >
           {listItems.map(li => {
             return (
               <>
                 <ListItemButton
-                  onClick={clickedItem => {
-                    const target = clickedItem.target as HTMLDivElement;
-                    const innerText = target.innerText;
-                    setListItems(stableItems.map(stableItem => {
-                      const condition = stableItem.title === innerText;
-                      return {
-                        ...stableItem,
-                        open: condition ? true : false,
-                        selected: condition ? true : false,
-                      };
-                    }));
-                    subString !== "" && setSubString("");
-                    setCategory(innerText);
-                  }}
+                  onClick={e => onItemClick(e)}
                   selected={li.selected}
                 >
                   <ListItemText primary={li.title} />
@@ -88,29 +108,7 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
                       return (
                         <ListItemButton
                           sx={{ pl: 4 }}
-                          onClick={clickedItem => {
-                            const target = clickedItem.target as HTMLDivElement;
-                            const innerText = target.innerText;
-                            setListItems(
-                              stableItems.map(stableItem => {
-                                return {
-                                  ...stableItem,
-                                  open: stableItem.contents
-                                    .map(el => el.text)
-                                    .includes(innerText) && true,
-                                  contents: stableItem.contents
-                                    .map(stableSubItem => {
-                                      return {
-                                        ...stableSubItem,
-                                        selected: stableSubItem.text === innerText && true,
-                                      };
-                                    }),
-                                };
-                              })
-                            );
-                            category !== "" && setCategory("");
-                            setSubCategory(innerText);
-                          }}
+                          onClick={e => onSubItemClick(e)}
                           selected={subItem.selected}
                         >
                           <ListItemText primary={subItem.text} />

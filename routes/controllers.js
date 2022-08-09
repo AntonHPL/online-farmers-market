@@ -18,12 +18,19 @@ const getMenu = (req, res) => {
 };
 
 const countAds = (req, res) => {
-  const countOptions =
-    req.query.category ? {
-      "textInfo.category": req.query.category
-    } : req.query.subString ? {
-      "textInfo.title": new RegExp(req.query.subString, "gi")
-    } : {};
+  const subString = req.query.subString;
+  const category = req.query.category;
+  const subCategory = req.query.subCategory;
+  const countOptions = {};
+  if (subString) {
+    countOptions["textInfo.title"] = new RegExp(subString, "gi");
+  };
+  if (category) {
+    countOptions["textInfo.category"] = category;
+  };
+  if (subCategory) {
+    countOptions["textInfo.subCategory"] = subCategory;
+  };
 
   Ad
     .count(countOptions)
@@ -377,7 +384,7 @@ const getSellers = (req, res) => {
 
 const getSeller = (req, res) => {
   User
-    .find({ _id: req.params.id }, { image: true, name: true })
+    .find({ _id: req.params.id }, { image: true, name: true, registrationDate: true })
     .then(seller => res.json(seller));
 };
 

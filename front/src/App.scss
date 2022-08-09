@@ -1,14 +1,15 @@
 @import "./styles/variables/variables.scss";
 @import "./styles/mixins/mixins.scss";
-
+@import "./styles/Ad.scss";
 @import "./styles/Ads.scss";
-@import "./styles/SignUpForm.scss";
 @import "./styles/Captcha.scss";
+@import "./styles/Chats.scss";
 @import "./styles/Header.scss";
+@import "./styles/ImageSlider.scss";
 @import "./styles/LogInForm.scss";
 @import "./styles/NewAd.scss";
 @import "./styles/Profile.scss";
-@import "./styles/Chats.scss";
+@import "./styles/SignUpForm.scss";
 
 @import url($fonts_url);
 
@@ -54,10 +55,6 @@ h4 {
   // @include border(red, 4px);
 }
 
-h5 {
-  @include indents(10px 0 !important);
-}
-
 .css-18lvne8-MuiList-root {
   @include indents($padding: 0 !important);
 }
@@ -78,101 +75,7 @@ a {
   }
 }
 
-.slider {
-  border: 1px solid $primary_main;
-  width: 500px;
-  height: 500px;
-  border-radius: 10px;
-  overflow: hidden;
-}
 
-.slides {
-  width: 500%;
-  height: 500px;
-  display: flex;
-}
-
-.slides input {
-  display: none;
-}
-
-.slide {
-  width: 20%;
-  transition: .5s ease-in-out;
-  @include flex_center();
-}
-
-.slide img {
-  @include size(100%, 100%);
-  object-fit: contain;
-}
-
-/*css for manual slide navigation*/
-
-.navigation-manual {
-  position: absolute;
-  width: 500px;
-  margin-top: -40px;
-  @include flex_center();
-}
-
-.manual-btn {
-  border: 2px solid $primary_main;
-  @include size(20px, 20px);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: .5s ease-in-out;
-
-  &:hover {
-    border: 2px solid $primary_dark;
-    background: $secondary_main;
-  }
-
-  &:active {
-    border: 2px solid $primary_dark;
-    background: $primary_dark;
-  }
-}
-
-.selected_manual-button {
-  border: 2px solid $primary_main;
-  @include size(20px, 20px);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: .5s ease-in-out;
-  background: $primary_main;
-
-  &:hover,
-  :active {
-    border: 2px solid $primary_main;
-    cursor: default
-  }
-}
-
-.navigation-manual div:not(:last-child) {
-  margin-right: 40px;
-}
-
-/*css for automatic navigation*/
-
-.navigation-auto {
-  position: absolute;
-  display: flex;
-  width: 500px;
-  justify-content: center;
-  margin-top: 460px;
-}
-
-.navigation-auto div {
-  border: 2px solid #40D3DC;
-  padding: 5px;
-  border-radius: 10px;
-  transition: .5s ease-in-out;
-}
-
-.navigation-auto div:not(:last-child) {
-  margin-right: 40px;
-}
 
 .first-message_dialog {
   .seller-account_image {
@@ -191,7 +94,7 @@ a {
 
   .seller_info {
     @include flex_options($align-items: center);
-    // @include size(100px, 30px)
+    // @include size(100px, 30px);
   }
 
   .MuiDialogContent-root {

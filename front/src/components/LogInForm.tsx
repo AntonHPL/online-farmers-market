@@ -1,12 +1,11 @@
 import { useState, useEffect, useContext, FC, FormEvent } from 'react';
 import { Alert, Button, TextField, FormControlLabel, Checkbox, Link } from '@mui/material';
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { LogInFormPropsInterface, LogInFormInputsInterface, ErrorInterface } from "../types";
 import { errorFound, resetErrors } from "../functions/functions";
 
-const LogInForm: FC<LogInFormPropsInterface> = ({ isOpen, setSignUpDialog, setLoading }) => {
+const LogInForm: FC<LogInFormPropsInterface> = ({ isOpen, setIsSignUpDialogOpen, setLoading }) => {
   const emptyInputs: LogInFormInputsInterface = {
     email: "",
     password: "",
@@ -16,8 +15,8 @@ const LogInForm: FC<LogInFormPropsInterface> = ({ isOpen, setSignUpDialog, setLo
   const [cookieAge, setCookieAge] = useState<number | null>(7 * 24 * 3600 * 1000);
   const [authorizationError, setAuthorizationError] = useState("");
   const [errors, setErrors] = useState<Array<ErrorInterface>>([]);
-  const navigate = useNavigate();
-  const { setTokenValidation, setLogInDialog: setDialog } = useContext(UserContext);
+
+  const { setTokenValidation, setIsLogInDialogOpen: setIsDialogOpen } = useContext(UserContext);
 
   useEffect(() => {
     !isOpen && setInputs(emptyInputs);
@@ -47,7 +46,7 @@ const LogInForm: FC<LogInFormPropsInterface> = ({ isOpen, setSignUpDialog, setLo
         .post("/api/log-in", { email: inputs.email, password: inputs.password, cookieAge: cookieAge })
         .then(() => {
           setTokenValidation(true);
-          setDialog({ open: false });
+          setIsDialogOpen(false);
           // navigate("/");
           setInputs(emptyInputs);
           setLoading(false);
@@ -125,7 +124,7 @@ const LogInForm: FC<LogInFormPropsInterface> = ({ isOpen, setSignUpDialog, setLo
       <p className="prompt">
         Don't have an Account yet?&nbsp;
         <Link
-          onClick={() => setSignUpDialog({ open: true })}
+          onClick={() => setIsSignUpDialogOpen(true)}
           underline="hover"
         >
           Sign up.

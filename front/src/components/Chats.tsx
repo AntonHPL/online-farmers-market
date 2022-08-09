@@ -68,7 +68,7 @@ const Chats: FC = () => {
 							if (chat.adId === ad._id) {
 								modifiedChatsData[i] = {
 									...chat,
-									adImage: ad.images[0].data,
+									adImage: ad.images[0]?.data || undefined,
 									adTitle: ad.textInfo.title
 								};
 							};
@@ -90,7 +90,7 @@ const Chats: FC = () => {
 							if (chat.myInterlocutor?.id === seller._id) {
 								modifiedChatsData[i] = {
 									...chat,
-									sellerImage: seller.image.data,
+									sellerImage: seller.image?.data || undefined,
 								};
 							};
 						});
@@ -99,7 +99,7 @@ const Chats: FC = () => {
 				});
 		};
 	}, [chatsData]);
-
+console.log("chats", chats)
 	useEffect(() => {
 		const adIdSelected = localStorage.getItem("ad-id_selected")
 		adIdSelected && chats.length && revealHistory(adIdSelected);
@@ -166,7 +166,7 @@ const Chats: FC = () => {
 								>
 									<div className="images_container">
 										<div className="ad_image">
-											<img src={`data:image/png;base64,${chat.adImage}`} />
+											{chat.adImage && <img src={`data:image/png;base64,${chat.adImage}`} />}
 										</div>
 										{chat.sellerImage ?
 											<div className="seller_image">

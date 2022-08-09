@@ -1,24 +1,21 @@
-import { useState, useContext, FC, MouseEvent } from "react";
+import { useState, useEffect, useContext, FC, MouseEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { AppBar, Menu, MenuItem, Badge, Toolbar, Box, Button, IconButton, Dialog, DialogTitle, DialogContent, Backdrop, CircularProgress } from "@mui/material";
+import { AppBar, Menu, MenuItem, Toolbar, Box, Button, IconButton, Dialog, DialogTitle, DialogContent, Backdrop, CircularProgress } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-// import MailIcon from "@mui/icons-material/Mail";
-// import NotificationsIcon from "@mui/icons-material/Notifications";
 import { UserContext } from "./UserContext";
 import axios from "axios";
 import LogInForm from "./LogInForm";
 import SignUpForm from "./SignUpForm";
-import { useEffect } from "react";
 import logo from "../images/logo.png";
 
 const Header: FC = () => {
-  const { user, setUser, logInDialog, setLogInDialog } = useContext(UserContext);
+  const { user, setUser, isLogInDialogOpen, setIsLogInDialogOpen } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   // const [menu, setMenu] = useState(null);
-  const [signUpDialog, setSignUpDialog] = useState({ open: false });
+  const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
   const [accountImage, setAccountImage] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -38,17 +35,17 @@ const Header: FC = () => {
   };
 
   const closeDialog = (): void => {
-    logInDialog.open && setLogInDialog({ open: false });
-    signUpDialog.open && setSignUpDialog({ open: false })
+    isLogInDialogOpen && setIsLogInDialogOpen(false);
+    isSignUpDialogOpen && setIsSignUpDialogOpen(false)
   };
 
   useEffect(() => {
-    signUpDialog.open && setLogInDialog({ open: false });
-  }, [signUpDialog]);
+    isSignUpDialogOpen && setIsLogInDialogOpen(false);
+  }, [isSignUpDialogOpen]);
 
   useEffect(() => {
-    logInDialog.open && setSignUpDialog({ open: false });
-  }, [logInDialog]);
+    isLogInDialogOpen && setIsSignUpDialogOpen(false);
+  }, [isLogInDialogOpen]);
 
   const logout = (): void => {
     axios
@@ -56,7 +53,7 @@ const Header: FC = () => {
       .then(() => {
         closeMenu();
         setUser(null);
-        setLogInDialog({ open: true });
+        setIsLogInDialogOpen(true);
       })
   };
 
@@ -91,7 +88,7 @@ const Header: FC = () => {
     >
       <MenuItem
         onClick={() => {
-          user ? navigate("/profile") : setLogInDialog({ open: true });
+          user ? navigate("/profile") : setIsLogInDialogOpen(true);
           closeMenu();
         }}
       >
@@ -110,7 +107,6 @@ const Header: FC = () => {
       </MenuItem>
     </Menu>
   );
-
 
   // const mobileMenuId = "primary-search-account-menu-mobile";
   // const renderMobileMenu = (
@@ -165,11 +161,11 @@ const Header: FC = () => {
   // );
 
   return (
-    <Box sx={{ flexGrow: 1, zIndex: 10 }}>
+    <div className = "header-container">
       <AppBar position="static">
         <Toolbar>
           <div
-            className="logo_container"
+            className="logo"
             onClick={() => window.location.href = "/"}
           >
             <img
@@ -178,14 +174,12 @@ const Header: FC = () => {
             />
           </div>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
-              aria-label="new_advertisement"
               color="inherit"
               onClick={() => user ?
                 navigate("/new-advertisement") :
-                setLogInDialog({ open: true })
+                setIsLogInDialogOpen(true)
               }
             >
               <AddCircleOutlineIcon />
@@ -199,11 +193,11 @@ const Header: FC = () => {
                 onClick={openMenu}
                 color="inherit"
                 endIcon={
-                  <div className="account_image">
+                  <div className="account-image">
                     <img src={`data:image/png;base64,${accountImage}`} />
                   </div>
                 }
-                className="profile_button"
+                className="profile-button"
               >
                 {user.name}
               </Button> :
@@ -213,13 +207,12 @@ const Header: FC = () => {
                 aria-label="current_user_account"
                 aria-controls={menuId}
                 aria-haspopup="true"
-                onClick={() => setLogInDialog({ open: true })}
+                onClick={() => setIsLogInDialogOpen(true)}
                 color="inherit"
               >
                 <AccountCircle />
               </IconButton>
             }
-          </Box>
           {/* <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -237,22 +230,22 @@ const Header: FC = () => {
       {/* {renderMobileMenu} */}
       {user && renderMenu}
       <Dialog
-        open={logInDialog.open || signUpDialog.open}
+        open={isLogInDialogOpen || isSignUpDialogOpen}
         keepMounted
         onClose={closeDialog}
-        aria-describedby="alert-dialog-slide-description"
-        className="sign-up-dialog"
+        className="account-dialog"
       >
         <DialogTitle>
-          {signUpDialog.open ?
-            "Create an Account" :
-            "Log in"
-          }
+          {isLogInDialogOpen ? "Log in" : "Create an Account"}
         </DialogTitle>
         <DialogContent className="dialog-content">
-          {signUpDialog.open ?
-            <SignUpForm setLoading={setLoading} /> :
-            <LogInForm isOpen={logInDialog.open} setSignUpDialog={setSignUpDialog} setLoading={setLoading} />
+          {isLogInDialogOpen ?
+            <LogInForm
+              isOpen={isLogInDialogOpen}
+              setIsSignUpDialogOpen={setIsSignUpDialogOpen}
+              setLoading={setLoading}
+            /> :
+            <SignUpForm setLoading={setLoading} />
           }
         </DialogContent>
         <Backdrop
@@ -262,7 +255,7 @@ const Header: FC = () => {
           <CircularProgress />
         </Backdrop>
       </Dialog>
-    </Box>
+    </div>
   );
 }
 

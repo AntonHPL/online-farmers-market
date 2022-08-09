@@ -29,11 +29,12 @@ export const getAds = ({
       }
     })
     .then(({ data }) => {
-      setAds(data);
+      setAds(data.length ? data : null);
       axios.get("/api/count_ads", {
         params: {
           subString: subString || undefined,
           category: category || undefined,
+          subCategory: subCategory || undefined,
         }
       })
         .then(({ data }) => {

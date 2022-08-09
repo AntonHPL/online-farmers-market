@@ -20,7 +20,7 @@ const SignUpForm: FC<SignUpFormPropsInterface> = ({ setLoading }) => {
   const [captchaReload, setCaptchaReload] = useState(false);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState(false);
 
-  const { setLogInDialog } = useContext(UserContext);
+  const { setIsLogInDialogOpen } = useContext(UserContext);
   const passwordRegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/g;
 
   const errorFound = (field: string): ErrorInterface | undefined => {
@@ -209,7 +209,7 @@ const SignUpForm: FC<SignUpFormPropsInterface> = ({ setLoading }) => {
       <p className="prompt">
         Already have an Account?&nbsp;
         <Link
-          onClick={() => setLogInDialog({ open: true })}
+          onClick={() => setIsLogInDialogOpen(true)}
           underline="hover"
         >
           Log in.
