@@ -161,6 +161,7 @@ export type UserType = {
   _id: string,
   email: string,
   name: string,
+  registrationDate: string,
   image: { data: string },
 } | null;
 
@@ -232,4 +233,12 @@ export interface CaptchaPropsInterface {
   errorFound: (field: string) => ErrorInterface | undefined,
   resetErrors: (field: string) => void,
   captchaReload: boolean,
+}
+
+export interface GeneralInfoContextInterface {
+  changingAccountImage: boolean,
+  closeDialog: () => void,
+  outletTitle: string,
+  setIsDialogOpen: (isDialogOpen: boolean) => void,
+  setOutletTitle: (outletTitle: string) => void,
 }

@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -5,17 +7,17 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import NewAd from "./components/NewAd";
 import Ad from "./components/Ad";
 import Ads from "./components/Ads";
+import Chats from "./components/Chats";
+import GeneralInfo from "./components/GeneralInfo";
 import Header from "./components/Header";
+import NewAd from "./components/NewAd";
+import Profile from "./components/Profile";
+import { UserContext } from "./components/UserContext";
+import "./App.scss";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { orange } from "@mui/material/colors";
-import Profile from "./components/Profile";
-import "./App.scss";
-import Chats from "./components/Chats";
-import { UserContext } from "./components/UserContext";
-import { useContext } from "react";
 
 const theme = createTheme({
   palette: {
@@ -43,6 +45,7 @@ const App = () => {
                 <>
                   <Route path="/new-advertisement" element={<NewAd />} />
                   <Route path="/profile" element={<Profile />}>
+                    <Route path="general-info" element={<GeneralInfo />} />
                     <Route path="chats" element={<Chats />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { ErrorInterface, GetAdsPropsInterface } from "../types";
+import { ErrorInterface, GetAdsPropsInterface, GeneralInfoContextInterface } from "../types";
+import { useOutletContext } from "react-router-dom";
 
 export const getAds = ({
   functionProps: {
@@ -49,3 +50,5 @@ export const errorFound = (errors: Array<ErrorInterface>, field: string): ErrorI
 export const resetErrors = (errors: Array<ErrorInterface>, field: string, setErrors: (cb: (prev: Array<ErrorInterface>) => Array<ErrorInterface>) => void): void => {
   errorFound(errors, field) && setErrors(prev => prev.filter((el => el.field !== field)));
 };
+
+export const useGeneralInfoContext = (): GeneralInfoContextInterface => useOutletContext<GeneralInfoContextInterface>();

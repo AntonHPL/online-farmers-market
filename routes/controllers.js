@@ -328,10 +328,8 @@ const postChat = (req, res) => {
 
 const getUser = (req, res) => {
   User
-    .find({ _id: req.params.id }, { name: true, email: true, "image.data": true })
-    .then(user => {
-      res.json(user)
-    })
+    .find({ _id: req.params.id }, { name: true, registrationDate: true, email: true, "image.data": true })
+    .then(user => res.json(user))
     .catch(error => console.error(error));
 };
 
@@ -377,14 +375,14 @@ const getSellers = (req, res) => {
   User
     .find(
       { _id: { $in: JSON.parse(req.query.sellersIds) } },
-      { image: true, name: true }
+      { "image.data": true, name: true }
     )
     .then(sellers => res.json(sellers));
 };
 
 const getSeller = (req, res) => {
   User
-    .find({ _id: req.params.id }, { image: true, name: true, registrationDate: true })
+    .find({ _id: req.params.id }, { "image.data": true, name: true, registrationDate: true })
     .then(seller => res.json(seller));
 };
 

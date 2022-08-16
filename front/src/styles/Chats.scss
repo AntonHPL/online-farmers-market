@@ -1,26 +1,113 @@
-.chat_container {
+.chat-container {
   @include relative();
   @include flex_options();
   @include size(calc(300px + 10px + 700px), calc(100vh - 68px - 24px - 20px));
 
-  .loading_backdrop {
+  .backdrop {
     @include absolute();
     border-radius: 4px;
     background-color: $secondary_main;
     @include size(100% !important, 100% !important);
 
-    // opacity: 1 !important;
-    .loading {
+    svg {
       color: $primary_dark;
     }
   }
 
-  .chat_and_form {
-    @include flex_options(column, $justify_content: stretch);
-    @include border($secondary_dark, 4px);
-    @include border_box();
-    @include size(700px);
+  .interlocutors {
+    margin-right: 10px;
+
+    .interlocutor {
+      @include flex_options($align_items: center);
+      @include size(300px, 100px);
+      @include indents(0 0 5px, 5px);
+      @include border_box();
+      @include relative();
+
+      .images {
+        @include relative();
+        @include size(90px, calc(100px - 5px - 5px));
+
+        .seller-image {
+          @include size(45px, 45px);
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          @include border($primary_bright, 50%);
+          @include border_box();
+          overflow: hidden;
+          @include flex_center();
+
+          img {
+            object-fit: cover;
+            min-width: 45px;
+            min-height: 45px;
+          }
+        }
+
+        .account-circle {
+          @include size(45px, 45px);
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+
+        .ad-image {
+          @include size(80px, 80px);
+          @include border($primary_bright, 4px);
+          overflow: hidden;
+          @include border_box();
+          @include flex_center();
+
+          img {
+            min-width: 90px;
+            min-height: 90px;
+            object-fit: cover;
+          }
+        }
+
+        .no-photography {
+          @include size(45px, 45px);
+        }
+      }
+
+      .sender-info {
+        @include indents(0 0 0 10px)
+      }
+
+      &.selected {
+        background: $primary_bright;
+
+        .seller-image, .ad-image {
+          border: 1px solid #fff !important;
+        }
+      }
+
+      &:hover {
+        background-color: $primary_dark;
+        color: #fff;
+        transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+
+        .seller-image, .ad-image {
+          border: 1px solid #fff !important;
+        }
+      }
+
+      >svg {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+      }
+    }
   }
+}
+
+.chat-and-form {
+  @include flex_options(column, $justify_content: stretch);
+  @include border($secondary_dark, 4px);
+  @include border_box();
+  @include size(700px);
 
   .chat {
     @include flex_options(column);
@@ -40,119 +127,49 @@
       }
     }
 
-    .sent_message,
-    .received_message {
+    .sent-message,
+    .received-message {
       @include size(fit-content, fit-content);
       max-width: 300px;
-      @include indents(5px 0, 10px);
+      @include indents(4px 0, 8px);
       user-select: none;
+      @include flex_options();
     }
 
-    .sent_message {
+    .sent-message {
       background-color: $primary_dark;
       color: white;
       align-self: flex-end;
       border-radius: 8px 8px 0;
+
+      div {
+        text-align: right;
+        margin-left: 8px;
+        font-size: 0.65em;
+        @include flex_options($align_items: flex-end);
+      }
     }
 
-    .received_message {
+    .received-message {
       background-color: #fff;
       align-self: flex-start;
       border-radius: 8px 8px 8px 0;
+
+      div {
+        order: -1;
+        margin-right: 8px;
+        font-size: 0.65em;
+        @include flex_options($align_items: flex-end);
+      }
     }
   }
 
   form {
     @include flex_options($justify_content: space-between, $align_items: center);
-    @include indents($padding: 0 5px);
+    @include indents($padding: 0 8px);
 
-    .form_row {
-      @include size(calc(100% - 40px - 5px));
-    }
-  }
-
-  .interlocutors {
-    margin-right: 10px;
-  }
-
-  .interlocutor {
-    @include flex_options($align_items: center);
-    @include size(300px, 100px);
-    @include indents(0 0 5px, 5px);
-    @include border_box();
-
-    &:hover {
-      background-color: $primary_dark;
-      color: #fff;
-      cursor: pointer;
-
-      .seller_image {
-        border: 1px solid #fff !important;
-      }
-
-      .ad_image {
-        border: 1px solid #fff !important;
-      }
-    }
-
-    .interlocutor_image {
-      @include size(50px);
-    }
-
-    .sender_info {
-      @include indents(0 0 0 10px)
-    }
-
-    .images_container {
-      @include relative();
-      @include size(90px, calc(100px - 5px - 5px));
-
-      .seller_image {
-        @include size(45px, 45px);
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        @include border($primary_bright, 50%);
-        @include border_box();
-        overflow: hidden;
-        @include flex_center();
-
-        img {
-          object-fit: cover;
-          min-width: 45px;
-          min-height: 45px;
-        }
-      }
-
-      .ad_image {
-        @include size(80px, 80px);
-        @include border($primary_bright, 4px);
-        overflow: hidden;
-        @include border_box();
-        @include flex_center();
-
-        :hover {
-          border: 1px solid #fff;
-        }
-
-        >img {
-          min-width: 90px;
-          min-height: 90px;
-          object-fit: cover;
-        }
-      }
-    }
-  }
-
-  .selected {
-    background: $primary_bright;
-
-    .seller_image {
-      border: 1px solid #fff !important;
-    }
-
-    .ad_image {
-      border: 1px solid #fff !important;
+    .form-row {
+      @include size(calc(100% - 40px - 8px));
     }
   }
 
@@ -162,9 +179,7 @@
   }
 }
 
-
-
-.sender_info {
+.sender-info {
   h6 {
     line-height: 1.4 !important;
   }
@@ -173,35 +188,5 @@
     font-weight: normal;
     font-size: 1.125rem;
     font-style: italic;
-  }
-}
-
-.profile_container {
-  @include indents($padding: 0 20px);
-  background-color: $secondary_bright;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: $secondary_main;
-  border-radius: 4px;
-  padding-right: 20px;
-}
-
-::-webkit-scrollbar-thumb {
-  height: 5px;
-  background: $secondary_dark;
-  border-radius: 4px;
-
-  &:hover {
-    background: $primary_bright;
-  }
-
-  &:active {
-    background: $primary_main;
   }
 }

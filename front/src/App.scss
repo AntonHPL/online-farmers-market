@@ -101,3 +101,28 @@ a {
     padding-bottom: 0 !important;
   }
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $secondary_main;
+  border-radius: 4px;
+  padding-right: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 5px;
+  background: $secondary_dark;
+  border-radius: 4px;
+
+  &:hover {
+    background: $primary_bright;
+  }
+
+  &:active {
+    background: $primary_main;
+  }
+}

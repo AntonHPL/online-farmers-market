@@ -1,6 +1,6 @@
 import { useState, useContext, FC, FormEvent } from "react";
 import { Backdrop, TextField, IconButton, Paper, Typography, CircularProgress } from "@mui/material";
-import { AccountCircle, Send } from "@mui/icons-material";
+import { AccountCircle, Delete, NoPhotography, Send } from "@mui/icons-material";
 import { useEffect } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
@@ -99,7 +99,7 @@ const Chats: FC = () => {
 				});
 		};
 	}, [chatsData]);
-console.log("chats", chats)
+	console.log("chats", chats)
 	useEffect(() => {
 		const adIdSelected = localStorage.getItem("ad-id_selected")
 		adIdSelected && chats.length && revealHistory(adIdSelected);
@@ -147,13 +147,13 @@ console.log("chats", chats)
 	};
 
 	return (
-		<div className="chat_container">
+		<div className="chat-container">
 			{loading ?
 				<Backdrop
-					className="loading_backdrop"
+					className="backdrop"
 					open={true}
 				>
-					<CircularProgress className="loading" />
+					<CircularProgress />
 				</Backdrop> :
 				<>
 					<div className="interlocutors">
@@ -164,18 +164,21 @@ console.log("chats", chats)
 									className={`interlocutor ${chatId === chat._id ? "selected" : ""}`}
 									onClick={() => revealHistory(chat.adId)}
 								>
-									<div className="images_container">
-										<div className="ad_image">
-											{chat.adImage && <img src={`data:image/png;base64,${chat.adImage}`} />}
-										</div>
+									<div className="images">
+										{chat.adImage ?
+											<div className="ad-image">
+												<img src={`data:image/png;base64,${chat.adImage}`} />
+											</div> :
+											<NoPhotography className="no-photography" />
+										}
 										{chat.sellerImage ?
-											<div className="seller_image">
+											<div className="seller-image">
 												<img src={`data:image/png;base64,${chat.sellerImage}`} />
 											</div> :
-											<AccountCircle className="interlocutor_image" />
+											<AccountCircle viewBox="2 2 20 20" className="account-circle" />
 										}
 									</div>
-									<div className="sender_info">
+									<div className="sender-info">
 										<Typography variant="h6">
 											{chat.myInterlocutor?.name}
 										</Typography>
@@ -184,11 +187,12 @@ console.log("chats", chats)
 										</Typography>
 										{lastMessage.senderId === myId ? `You: ${lastMessage.message}` : lastMessage.message}
 									</div>
+									<Delete />
 								</Paper>
 							);
 						})}
 					</div>
-					<div className="chat_and_form">
+					<div className="chat-and-form">
 						{isChatChosen ?
 							<>
 								<div className="chat">
@@ -203,17 +207,17 @@ console.log("chats", chats)
 													</div>
 												}
 												<Paper
-													className={el.senderId === myId ? "sent_message" : "received_message"}
+													className={el.senderId === myId ? "sent-message" : "received-message"}
 												>
 													{el.message}
-													<>
+													<div>
 														{el.creationDate && new Date(el.creationDate)
 															.toLocaleTimeString("en-US", {
 																hour: "numeric",
 																minute: "numeric"
 															})
 														}
-													</>
+													</div>
 												</Paper>
 											</>
 										)
@@ -229,7 +233,7 @@ console.log("chats", chats)
 										autoComplete="off"
 										placeholder="Enter your Message"
 										onChange={e => setMessage(e.target.value)}
-										className="form_row"
+										className="form-row"
 									/>
 									<IconButton type="submit">
 										<Send />

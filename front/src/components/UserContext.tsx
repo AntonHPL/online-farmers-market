@@ -4,7 +4,7 @@ import { UserContextInterface, UserType } from "../types";
 
 const emptyFunction = (): void => { };
 const defaultUserContext: UserContextInterface = {
-    user: { _id: "", name: "", email: "", image: { data: "" } },
+    user: { _id: "", name: "", registrationDate: "", email: "", image: { data: "" } },
     setUser: emptyFunction,
     isLogInDialogOpen: false,
     setIsLogInDialogOpen: emptyFunction,
