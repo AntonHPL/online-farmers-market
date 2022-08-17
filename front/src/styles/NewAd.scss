@@ -40,7 +40,7 @@
       }
 
       .main-image-card {
-        @include relative(!important);
+        @include relative( !important);
         @include size(180px !important, 180px);
         @include flex-options($align_items: center);
         @include indents(4px);
@@ -51,17 +51,23 @@
         }
       }
 
-      .delete-button {
-        @include absolute(4px, 4px);
-        background-color: #fff !important;
-        animation: myAnimation 0.3s linear;
+      .image-card,
+      .main-image-card {
+        opacity: 0;
+        transition: 0.3s ease-in-out;
       }
 
-      .invisible-delete-button {
-        @include absolute(4px, 4px);
-        opacity: 0;
-        background-color: #fff !important;
-        transition: 0.3s ease-in-out;
+      .image-card:hover,
+      .main-image-card:hover {
+        .delete-button {
+          @include absolute(4px, 4px);
+          background-color: #fff !important;
+          animation: myAnimation 0.3s linear;
+        }
+      }
+
+      .no-pointer-events {
+        pointer-events: none;
       }
 
       .first-loading-card {

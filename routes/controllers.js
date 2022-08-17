@@ -392,6 +392,13 @@ const determineChatExistence = (req, res) => {
     .then(chat => res.json(chat ? true : false))
 };
 
+const deleteChat = (req, res) => {
+  Chat
+    .findOneAndDelete({ _id: req.params.id })
+    .then(() => res.json("Ok"))
+    .catch(error => console.log(error))
+};
+
 module.exports = {
   getAds,
   countAds,
@@ -420,4 +427,5 @@ module.exports = {
   getAdsBriefly,
   getSellers,
   determineChatExistence,
+  deleteChat,
 };

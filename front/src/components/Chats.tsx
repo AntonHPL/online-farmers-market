@@ -1,23 +1,25 @@
-import { useState, useContext, FC, FormEvent } from "react";
-import { Backdrop, TextField, IconButton, Paper, Typography, CircularProgress } from "@mui/material";
+import { useState, useContext, FC, FormEvent, ReactElement } from "react";
+import { Backdrop, TextField, IconButton, Paper, Typography, CircularProgress, Skeleton } from "@mui/material";
 import { AccountCircle, Delete, NoPhotography, Send } from "@mui/icons-material";
 import { useEffect } from "react";
 import { UserContext } from "./UserContext";
 import axios from "axios";
-import { MessageInterface, ChatInterface, BriefAdInterface, ModifiedChatInterface, SellerInterface } from "../types";
+import ChatDeletionDialog from "./ChatDeletionDialog";
+import { MessageInterface, ChatInterface, BriefAdInterface, ModifiedChatInterface, SellerInterface, ChatDeletionDialogInterface } from "../types";
 
 const Chats: FC = () => {
-	const [oldMessages, setOldMessages] = useState<Array<MessageInterface>>([]);
+	const [oldMessages, setOldMessages] = useState<Array<MessageInterface> | null>(null);
 	const [newMessages, setNewMessages] = useState<Array<MessageInterface>>([]);
-	const [allMessages, setAllMessages] = useState<Array<MessageInterface>>([]);
+	const [allMessages, setAllMessages] = useState<Array<MessageInterface> | null>(null);
 	const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
 	const [message, setMessage] = useState("");
 	const [chatId, setChatId] = useState<string>("");
-	const [chatsData, setChatsData] = useState<Array<ChatInterface>>([]);
-	const [chats, setChats] = useState<Array<ModifiedChatInterface>>([]);
+	const [chatsData, setChatsData] = useState<Array<ChatInterface> | null>(null);
+	const [chats, setChats] = useState<Array<ModifiedChatInterface> | null>(null);
 	const [myId, setMyId] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [isChatChosen, setIsChatChosen] = useState(false);
+	const [dialog, setDialog] = useState<ChatDeletionDialogInterface>({ open: false, chatId: "" });
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
@@ -25,13 +27,17 @@ const Chats: FC = () => {
 		ws.onopen = () => console.log("Connected to the WS Server.");
 		ws.onmessage = message => setNewMessages(prev => [...prev, JSON.parse(message.data)]);
 		setWebSocket(ws);
+		return () => {
+			localStorage.getItem("ad-id_selected") && localStorage.removeItem("ad-id_selected");
+		};
 	}, []);
 
+	onbeforeunload = () => localStorage.getItem("ad-id_selected") && localStorage.removeItem("ad-id_selected");
 	useEffect(() => {
 		user && setMyId(user._id)
 	}, [user]);
 
-	useEffect(() => {
+	const getChatsData = (): void => {
 		setLoading(true);
 		myId &&
 			axios
@@ -41,14 +47,19 @@ const Chats: FC = () => {
 						setChatsData(data);
 						setLoading(false);
 					} else {
-						setOldMessages([]);
+						allMessages && setAllMessages(null);
+						setChats([]);
 						setLoading(false);
 					}
 				})
+	};
+
+	useEffect(() => {
+		getChatsData();
 	}, [myId]);
 
 	useEffect(() => {
-		if (chatsData.length) {
+		if (chatsData) {
 			const modifiedChatsData: Array<ModifiedChatInterface> = chatsData.map(chatData => {
 				return {
 					_id: chatData._id,
@@ -99,10 +110,10 @@ const Chats: FC = () => {
 				});
 		};
 	}, [chatsData]);
-	console.log("chats", chats)
+
 	useEffect(() => {
 		const adIdSelected = localStorage.getItem("ad-id_selected")
-		adIdSelected && chats.length && revealHistory(adIdSelected);
+		adIdSelected && chats && revealHistory(adIdSelected);
 	}, [chats]);
 
 	const send = (e: FormEvent): void => {
@@ -113,15 +124,16 @@ const Chats: FC = () => {
 	};
 
 	const save = () => {
-		oldMessages.length &&
+		oldMessages &&
 			axios.put("/api/chat", {
 				messages: newMessages, id: chatId,
 			})
 	};
 
 	useEffect(() => {
-		if (oldMessages.length) {
+		if (oldMessages?.length) {
 			const arr = oldMessages.concat(newMessages);
+			console.log("arr", arr)
 			let date = new Date(arr[0].creationDate || "").toLocaleDateString();
 			for (let i = 0; i < arr.length; i++) {
 				const currentDate = new Date(arr[i].creationDate || "");
@@ -138,26 +150,32 @@ const Chats: FC = () => {
 		};
 	}, [newMessages, oldMessages]);
 
+	const skeletons = (): Array<ReactElement> => {
+		const content = [];
+		for (let i = 0; i < 3; i++) {
+			content.push(
+				<Skeleton variant="rectangular" className="skeleton" />
+			)
+		};
+		return content;
+	}
+
 	const revealHistory = (el: string): void => {
-		const relatedChat = chats.find(chat => chat.adId === el);
+		const relatedChat = chats?.find(chat => chat.adId === el);
 		setNewMessages([]);
 		setOldMessages(relatedChat?.messages || []);
 		setChatId(relatedChat?._id || "");
 		setIsChatChosen(true);
 	};
 
+	console.log(isChatChosen);
+	const closeDialog = () => setDialog({ open: false, chatId: "" })
 	return (
 		<div className="chat-container">
-			{loading ?
-				<Backdrop
-					className="backdrop"
-					open={true}
-				>
-					<CircularProgress />
-				</Backdrop> :
-				<>
-					<div className="interlocutors">
-						{chats.map(chat => {
+			<>
+				<div className="interlocutors">
+					{chats ?
+						chats.map(chat => {
 							const lastMessage = chat.messages[chat.messages.length - 1];
 							return (
 								<Paper
@@ -187,70 +205,94 @@ const Chats: FC = () => {
 										</Typography>
 										{lastMessage.senderId === myId ? `You: ${lastMessage.message}` : lastMessage.message}
 									</div>
-									<Delete />
+									<IconButton
+										aria-label="delete"
+										className="delete-button"
+										onClick={() => setDialog({ open: true, chatId: chat._id })}
+									>
+										<Delete />
+									</IconButton>
 								</Paper>
 							);
-						})}
-					</div>
+						}) :
+						skeletons()
+					}
+				</div>
+				{chats ?
 					<div className="chat-and-form">
-						{isChatChosen ?
-							<>
-								<div className="chat">
-									{allMessages.map(el => {
-										return (
-											<>
-												{el.break &&
-													<div className="break">
-														<Paper>
-															{el.break}
-														</Paper>
-													</div>
-												}
-												<Paper
-													className={el.senderId === myId ? "sent-message" : "received-message"}
-												>
-													{el.message}
-													<div>
-														{el.creationDate && new Date(el.creationDate)
-															.toLocaleTimeString("en-US", {
-																hour: "numeric",
-																minute: "numeric"
-															})
-														}
-													</div>
-												</Paper>
-											</>
-										)
-									})}
+						{chats.length ?
+							(isChatChosen ?
+								<>
+									<div className="chat">
+										{allMessages?.map(el => {
+											return (
+												<>
+													{el.break &&
+														<div className="break">
+															<Paper>
+																{el.break}
+															</Paper>
+														</div>
+													}
+													<Paper
+														className={el.senderId === myId ? "sent-message" : "received-message"}
+													>
+														{el.message}
+														<div>
+															{el.creationDate && new Date(el.creationDate)
+																.toLocaleTimeString("en-US", {
+																	hour: "numeric",
+																	minute: "numeric"
+																})
+															}
+														</div>
+													</Paper>
+												</>
+											)
+										})}
+									</div>
+									<form onSubmit={send}>
+										<TextField
+											required
+											type="text"
+											size="small"
+											variant="outlined"
+											value={message}
+											autoComplete="off"
+											placeholder="Enter your Message"
+											onChange={e => setMessage(e.target.value)}
+											className="form-row"
+										/>
+										<IconButton type="submit">
+											<Send />
+										</IconButton>
+									</form>
+								</>
+								:
+								<div className="plug">
+									<Typography variant="body1">
+										Choose the Chat...
+									</Typography>
 								</div>
-								<form onSubmit={send}>
-									<TextField
-										required
-										type="text"
-										size="small"
-										variant="outlined"
-										value={message}
-										autoComplete="off"
-										placeholder="Enter your Message"
-										onChange={e => setMessage(e.target.value)}
-										className="form-row"
-									/>
-									<IconButton type="submit">
-										<Send />
-									</IconButton>
-								</form>
-							</> :
+							) :
 							<div className="plug">
 								<Typography variant="body1">
-									Choose the Chat...
+									No Chats...
 								</Typography>
 							</div>
 						}
-					</div>
-				</>
-			}
+					</div> :
+					<Backdrop
+						className="backdrop"
+						open={true}
+					>
+						<CircularProgress />
+					</Backdrop>
+				}
+			</>
 			{/* <button onClick={save}></button> */}
-		</div>
+			<ChatDeletionDialog dialog={dialog} closeDialog={closeDialog} getChatsData={getChatsData} />
+		</div >
 	);
 };
 

@@ -189,8 +189,10 @@ const Ads: FC = () => {
                   </Typography>
                 </CardContent>
                 <CardActions className="card-actions">
-                  {/* <Button size="small">Share</Button> */}
-                  <Button size="large">
+                  <Button
+                    onClick={() => renderParticularAd(el._id)}
+                    size="large"
+                  >
                     Learn more...
                   </Button>
                 </CardActions>

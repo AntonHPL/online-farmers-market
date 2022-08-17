@@ -16,7 +16,7 @@ import { GeneralInfoContextInterface } from "../types";
 const Profile: FC = () => {
   // const { user, isAccountImageChanged, setIsAccountImageChanged } = useContext(UserContext);
   const defaultOutletTitle = "My Profile";
-  const [outletTitle, setOutletTitle] = useState(defaultOutletTitle);
+  const [outletTitle, setOutletTitle] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [changingAccountImage, setChangingAccountImage] = useState(false);
   const closeDialog = () => setIsDialogOpen(false);
@@ -27,19 +27,24 @@ const Profile: FC = () => {
     closeDialog,
     outletTitle,
     setIsDialogOpen,
-    setOutletTitle,   
+    setOutletTitle,
   };
 
   useEffect(() => {
-    navigate(
-      outletTitle === defaultOutletTitle ?
-        "/profile/general-info" :
-        outletTitle === "My Ads" ?
-          "/profile/ads" :
-          outletTitle === "My Chats" ?
-            "/profile/chats" :
-            "/"
-    );
+    localStorage.getItem("ad-id_selected") ? setOutletTitle("My Chats") : setOutletTitle(defaultOutletTitle);
+  }, []);
+
+  useEffect(() => {
+    outletTitle &&
+      navigate(
+        outletTitle === defaultOutletTitle ?
+          "/profile/general-info" :
+          outletTitle === "My Ads" ?
+            "/profile/ads" :
+            outletTitle === "My Chats" ?
+              "/profile/chats" :
+              "/"
+      );
   }, [outletTitle]);
 
   return (

@@ -29,6 +29,7 @@ const {
   getAdsBriefly,
   getSellers,
   determineChatExistence,
+  deleteChat,
 } = require("./controllers")
 
 const router = express.Router();
@@ -64,6 +65,7 @@ router.put("/api/chat", addMessages);
 
 router.delete("/api/ad/:creationDate", deleteAd);
 router.delete("/api/unsaved_ad/:creationDate", deleteUnsavedAd);
+router.delete("/api/chat/:id", deleteChat)
 
 router.get("/api/verify-email", verifyEmail);
 

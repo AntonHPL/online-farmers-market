@@ -67,7 +67,6 @@ const NewAd: FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [imagesBeingUploaded, setImagesBeingUploaded] = useState(0);
   const [imageBeingRemoved, setImageBeingRemoved] = useState("");
-  const [deleteIcon, setDeleteIcon] = useState("");
   const [imagesError, setImagesError] = useState(false);
   const [errors, setErrors] = useState<Array<ErrorInterface>>([]);
 
@@ -317,6 +316,8 @@ const NewAd: FC = () => {
     e.dataTransfer.dropEffect = "copy";
   };
 
+  console.log("images", images)
+
   return (
     <div className="new-ad-container">
       <Typography variant="h4">
@@ -365,13 +366,12 @@ const NewAd: FC = () => {
             return (
               <Tooltip title="Click to make the picture the main one.">
                 <Card
-                  className={`${mainPictureId === e.id ? "main-" : ""}image-card`}
-                  onMouseOver={() => !imageBeingRemoved && setDeleteIcon(e.id)}
-                  onMouseLeave={() => setDeleteIcon("")}
+                  className={`${mainPictureId === e.id ? "main-" : ""}image-card ${imageBeingRemoved ? "no-pointer-events" : ""}`}
+                  onMouseOver={() => {}}
                 >
                   <IconButton
                     aria-label="delete"
-                    className={`${deleteIcon === e.id ? "" : "invisible-"}delete-button`}
+                    className="delete-button"
                     onClick={() => deleteImage(e.id)}
                   >
                     <DeleteIcon />

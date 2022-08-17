@@ -242,3 +242,13 @@ export interface GeneralInfoContextInterface {
   setIsDialogOpen: (isDialogOpen: boolean) => void,
   setOutletTitle: (outletTitle: string) => void,
 }
+
+export interface ChatDeletionDialogInterface {
+    open: boolean,
+    chatId: string,
+}
+export interface ChatDeletionDialogPropsInterface {
+  dialog: ChatDeletionDialogInterface,
+  closeDialog: () => void,
+  getChatsData: () => void,
+}
