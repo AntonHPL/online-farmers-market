@@ -1,7 +1,7 @@
 .chat-container {
   @include relative();
   @include flex_options();
-  @include size(calc(300px + 10px + 700px), calc(100vh - 68px - 24px - 20px));
+  @include size(calc(300px + 10px + 700px), calc(100vh - 64px - 73.99px - 24px - 20px));
 
   .backdrop {
     @include relative();
@@ -114,6 +114,24 @@
     border-radius: 4px;
     @include indents(0 0 4px);
   }
+
+  .no-chats-plug {
+    @include border($secondary_dark, 4px);
+  }
+
+  .choose-the-chat-plug,
+  .no-chats-plug {
+    @include size(100%, 100%);
+    @include flex_center();
+
+    div {
+      @include flex_options(column, center, center);
+
+      svg {
+        @include size(20%, 20%);
+      }
+    }
+  }
 }
 
 .chat-and-form {
@@ -124,7 +142,7 @@
 
   .chat {
     @include flex_options(column);
-    @include indents($padding: 0 5px);
+    @include indents($padding: 0 4px);
     @include border_box();
     overflow-y: auto;
     flex-grow: 1;
@@ -135,8 +153,7 @@
       div {
         background-color: $secondary_bright;
         @include size(fit-content, fit-content);
-        @include indents(5px 0, 5px);
-        user-select: none;
+        @include indents(4px 0, 4px);
       }
     }
 
@@ -145,7 +162,6 @@
       @include size(fit-content, fit-content);
       max-width: 300px;
       @include indents(4px 0, 8px);
-      user-select: none;
       @include flex_options();
     }
 
@@ -179,16 +195,13 @@
 
   form {
     @include flex_options($justify_content: space-between, $align_items: center);
-    @include indents($padding: 0 8px);
+    @include indents($padding: 4px);
+    @include size(100%);
+    @include border_box();
 
     .form-row {
-      @include size(calc(100% - 40px - 8px));
+      @include size(calc(100% - 40px - 4px));
     }
-  }
-
-  .plug {
-    @include size(100%, 100%);
-    @include flex_center();
   }
 }
 

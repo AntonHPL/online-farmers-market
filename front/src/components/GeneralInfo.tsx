@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, FC } from 'react';
-import { useGeneralInfoContext } from '../functions/functions';
+import { useProfileContext } from '../functions/functions';
 import { UserContext } from "./UserContext";
 import { Button, Paper, IconButton, Typography } from "@mui/material";
 import { AccountCircle } from '@mui/icons-material';
@@ -8,7 +8,7 @@ import axios from "axios";
 
 const GeneralInfo: FC = () => {
   const [accountImage, setAccountImage] = useState("");
-  const { changingAccountImage, closeDialog, outletTitle, setIsDialogOpen, setOutletTitle } = useGeneralInfoContext();
+  const { changingAccountImage, closeDialog, outletTitle, setIsDialogOpen, setOutletTitle } = useProfileContext();
   const [imageToUpload, setImageToUpload] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
@@ -84,19 +84,25 @@ const GeneralInfo: FC = () => {
         </div>
       </div>
       <div>
-      <Paper className = "email">
-        <Typography variant="body1">
-          Email: {user?.email}
-        </Typography>
-      </Paper>
-      <div className = "buttons">
-        <Button onClick={() => setOutletTitle("My Ads")} variant="contained">
-          My Ads
-        </Button>
-        <Button onClick={() => setOutletTitle("My Chats")} variant="contained">
-          My Chats
-        </Button>
-      </div>
+        <Paper className="email">
+          <Typography variant="body1">
+            Email: {user?.email}
+          </Typography>
+        </Paper>
+        <div className="buttons">
+          <Button
+            onClick={() => setOutletTitle("My Ads")}
+            variant="contained"
+          >
+            My Ads
+          </Button>
+          <Button
+            onClick={() => setOutletTitle("My Chats")}
+            variant="contained"
+          >
+            My Chats
+          </Button>
+        </div>
       </div>
     </Paper>
   );

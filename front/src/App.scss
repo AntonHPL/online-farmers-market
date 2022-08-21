@@ -10,6 +10,7 @@
 @import "./styles/NewAd.scss";
 @import "./styles/Profile.scss";
 @import "./styles/SignUpForm.scss";
+@import "./styles/AdCard.scss";
 
 @import url($fonts_url);
 
@@ -26,6 +27,7 @@
 * {
   font-family: 'Work Sans', sans-serif !important;
   @include indents(0);
+  user-select: none;
 }
 
 form {

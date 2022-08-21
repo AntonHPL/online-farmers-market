@@ -7,9 +7,9 @@ import {
   DialogActions,
   Dialog,
 } from "@mui/material";
-import { SuccessDialogPropsInterface } from "../types";
+import { DialogInterface } from "../types";
 
-const SuccessDialog: FC<SuccessDialogPropsInterface> = ({ open, closeDialog }) => {
+const SuccessDialog: FC<DialogInterface> = ({ open, closeDialog }) => {
   return (
     <Dialog
       open={open}

@@ -1,7 +1,7 @@
 .profile-container {
   @include indents($padding: 0 20px);
-  @include size($height: calc(100vh - 68px));
   background-color: $secondary_bright;
+  min-height: calc(100vh - 64px);
 
   nav {
     @include standard-margin-bottom();

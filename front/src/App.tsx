@@ -14,6 +14,7 @@ import GeneralInfo from "./components/GeneralInfo";
 import Header from "./components/Header";
 import NewAd from "./components/NewAd";
 import Profile from "./components/Profile";
+import MyAds from "./components/MyAds";
 import { UserContext } from "./components/UserContext";
 import "./App.scss";
 import { createTheme, ThemeProvider } from "@mui/material";
@@ -46,6 +47,7 @@ const App = () => {
                   <Route path="/new-advertisement" element={<NewAd />} />
                   <Route path="/profile" element={<Profile />}>
                     <Route path="general-info" element={<GeneralInfo />} />
+                    <Route path="ads" element={<MyAds />} />
                     <Route path="chats" element={<Chats />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />

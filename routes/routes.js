@@ -17,6 +17,7 @@ const {
   signUp,
   finishAd,
   addImages,
+  getMyAds,
   deleteImage,
   deleteAd,
   deleteUnsavedAd,
@@ -24,6 +25,7 @@ const {
   getChats,
   addMessages,
   getAccountImage,
+  getChat,
   getAd,
   getSeller,
   getAdsBriefly,
@@ -43,19 +45,21 @@ router.get("/api/count_ads", countAds);
 router.get("/api/images/:creationDate", getImages);
 router.get('/api/menu', getMenu);
 router.get("/api/regions", getRegions);
-router.get("/api/chats/:userId", getChats);
+router.get("/api/chats-briefly/:userId", getChats);
 router.get("/api/user/:id", getUser);
 router.get("/api/validate-token", validateToken);
 router.get("/api/account-image/:userId", getAccountImage);
 router.get("/api/ad/:id", getAd);
 router.get("/api/seller/:id", getSeller);
 router.get("/api/sellers", getSellers);
-router.get("/api/chat/:adId", determineChatExistence);
+router.get("/api/chat-existence/:adId", determineChatExistence);
+router.get("/api/chat/:id", getChat);
 router.post("/api/chat", postChat);
 router.post("/ad", upload.array("imagesInput", 4), postAd);
 router.put("/api/account-image", upload.single("imageInput"), addAccountImage);
 router.post("/api/log-in", logIn);
 router.post("/api/sign-up", signUp);
+router.get("/api/ads/:userId", getMyAds);
 router.get("/api/ads-briefly", getAdsBriefly);
 
 router.put("/api/ad/:creationDate", finishAd);

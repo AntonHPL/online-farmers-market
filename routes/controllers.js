@@ -326,6 +326,12 @@ const postChat = (req, res) => {
     .catch(error => console.error(error));
 };
 
+const getChat = (req, res) => {
+  Chat
+    .findOne({ _id: req.params.id }, { messages: true })
+    .then(chat => res.json(chat))
+};
+
 const getUser = (req, res) => {
   User
     .find({ _id: req.params.id }, { name: true, registrationDate: true, email: true, "image.data": true })
@@ -335,7 +341,7 @@ const getUser = (req, res) => {
 
 const getChats = (req, res) => {
   Chat
-    .find({ "participants.id": req.params.userId })
+    .find({ "participants.id": req.params.userId }, { messages: { $slice: -1 } })
     .then(chats => res.json(chats))
     .catch(error => console.error(error));
 };
@@ -344,9 +350,7 @@ const addMessages = (req, res) => {
   Chat
     .updateOne({ _id: req.body.id }, {
       $push: {
-        messages: {
-          $each: req.body.messages,
-        },
+        messages: req.body.message,
       },
     })
     .then(() => res.json("Ok"))
@@ -357,6 +361,12 @@ const getAd = (req, res) => {
   Ad
     .findOne({ _id: req.params.id })
     .then(ad => res.json(ad))
+};
+
+const getMyAds = (req, res) => {
+  Ad
+    .find({ "textInfo.sellerId": req.params.userId })
+    .then(ads => res.json(ads))
 };
 
 const getAdsBriefly = (req, res) => {
@@ -404,6 +414,7 @@ module.exports = {
   countAds,
   getImages,
   getMenu,
+  getMyAds,
   getRegions,
   validateToken,
   verifyEmail,
@@ -428,4 +439,5 @@ module.exports = {
   getSellers,
   determineChatExistence,
   deleteChat,
+  getChat,
 };

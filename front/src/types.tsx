@@ -1,5 +1,6 @@
-interface DialogInterface {
+export interface DialogInterface {
   open: boolean,
+  closeDialog: () => void,
 }
 
 export interface ImageSliderPropsInterface {
@@ -189,16 +190,17 @@ export interface SellerInterface {
   registrationDate: string,
 }
 
-export interface SuccessDialogPropsInterface extends DialogInterface {
-  closeDialog: () => void,
-}
-
-export interface FirstMessageDialogPropsInterface extends SuccessDialogPropsInterface {
+export interface FirstMessageDialogPropsInterface extends DialogInterface {
   seller: SellerInterface | null,
   messageText: string,
   setMessageText: (messageText: string) => void,
   ad: AdInterface | null,
   paramsId: string
+}
+
+export interface ConfirmationDialogPropsInterface extends DialogInterface {
+  changingAccountImage: boolean,
+  setChangingAccountImage: (changingAccountImage: boolean) => void,
 }
 
 export interface SortingOptionInterface {
@@ -235,7 +237,7 @@ export interface CaptchaPropsInterface {
   captchaReload: boolean,
 }
 
-export interface GeneralInfoContextInterface {
+export interface ProfileContextInterface {
   changingAccountImage: boolean,
   closeDialog: () => void,
   outletTitle: string,
@@ -244,11 +246,32 @@ export interface GeneralInfoContextInterface {
 }
 
 export interface ChatDeletionDialogInterface {
-    open: boolean,
-    chatId: string,
+  open: boolean,
+  chatId: string,
 }
 export interface ChatDeletionDialogPropsInterface {
   dialog: ChatDeletionDialogInterface,
   closeDialog: () => void,
   getChatsData: () => void,
+}
+
+export interface InterlocutorsPropsInterface {
+  myId: string,
+	chats: Array<ModifiedChatInterface> | null,
+	setChats: (chats: Array<ModifiedChatInterface> | null) => void,
+	newMessage: MessageInterface | null,
+	setNewMessage: (newMessage: MessageInterface | null) => void,
+	chatId: string,
+	setChatId: (chatId: string) => void,
+	setOldMessages: (oldMessages: Array<MessageInterface> | null) => void,
+	setIsChatChosen: (isChatChosen: boolean) => void,
+}
+
+export interface LastMessageInterface {
+  chatId: string,
+  message: MessageInterface,
+}
+
+export interface AdCardPropsInterface {
+  ad: AdInterface,
 }

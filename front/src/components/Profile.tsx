@@ -1,17 +1,12 @@
 import { useState, useEffect, FC } from "react";
 import {
   Breadcrumbs,
-  Button,
   Link,
   Typography,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-  DialogContentText
 } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
-import { GeneralInfoContextInterface } from "../types";
+import { ProfileContextInterface, ModifiedChatInterface } from "../types";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 const Profile: FC = () => {
   // const { user, isAccountImageChanged, setIsAccountImageChanged } = useContext(UserContext);
@@ -22,7 +17,7 @@ const Profile: FC = () => {
   const closeDialog = () => setIsDialogOpen(false);
   const navigate = useNavigate();
 
-  const outletContext: GeneralInfoContextInterface = {
+  const outletContext: ProfileContextInterface = {
     changingAccountImage,
     closeDialog,
     outletTitle,
@@ -67,29 +62,12 @@ const Profile: FC = () => {
         </Breadcrumbs>
       }
       <Outlet context={outletContext} />
-      <Dialog
+      <ConfirmationDialog
         open={isDialogOpen}
-        keepMounted
-        onClose={closeDialog}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>
-          Please confirm the Action.
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Do you want to set this Image as your Profile Picture?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setChangingAccountImage(!changingAccountImage)}>
-            Yes
-          </Button>
-          <Button onClick={closeDialog}>
-            No
-          </Button>
-        </DialogActions>
-      </Dialog>
+        closeDialog={closeDialog}
+        changingAccountImage={changingAccountImage}
+        setChangingAccountImage={setChangingAccountImage}
+      />
     </div>
   );
 };

@@ -1,14 +1,16 @@
-import { useState, useEffect, ReactElement } from "react";
+import { useState, useEffect, useContext, ReactElement } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 import axios from "axios";
 import { AdInterface, SellerInterface } from "../types";
 import FirstMessageDialog from "./FirstMessageDialog";
 import ImageSlider from "./ImageSlider";
-import { Button, Typography, Skeleton, Paper } from "@mui/material";
+import { Button, Typography, Skeleton, Link, Paper, Alert } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 
 const Ad = () => {
   const params = useParams();
+  const { user } = useContext(UserContext);
   const paramsId: string = params.id || "";
   const navigate = useNavigate();
   const [ad, setAd] = useState<AdInterface | null>(null);
@@ -32,26 +34,40 @@ const Ad = () => {
         .catch(error => console.error(error));
   }, [ad]);
 
-  const startConversation = (): void => {
+  const isAdMine = user?._id === ad?.textInfo.sellerId;
+
+  const startConversation = (textReceived?: string): void => {
     ad &&
       axios
-        .get(`/api/chat/${ad._id}`)
+        .get(`/api/chat-existence/${ad._id}`)
         .then(({ data }) => {
           if (data) {
             navigate("/profile/chats");
             localStorage.setItem("ad-id_selected", ad._id);
+            textReceived && localStorage.setItem("message-text", textReceived);
           } else {
-            setIsDialogOpen(true)
+            setIsDialogOpen(true);
+            textReceived && setMessageText(textReceived);
           }
         });
   };
 
-  const closeDialog = (): void => setIsDialogOpen(false);
+  const deleteAd = () => {
+    axios
+    .delete(`/api/ad/${ad?.creationDate}`)
+    .then(() => navigate("/profile/ads"))
+  };
+
+  const closeDialog = (): void => {
+    setIsDialogOpen(false);
+    messageText && setMessageText("");
+  };
+
   const writeToTheSellerButton = (): ReactElement => {
     return (
       <Button
         variant="contained"
-        onClick={startConversation}
+        onClick={() => startConversation()}
         className="write-to-the-seller-button"
       >
         Write to the Seller
@@ -65,7 +81,12 @@ const Ad = () => {
         className={`skeleton-${extraClass}`}
       />
     )
-  }
+  };
+
+  const firstQuickMessage = "Not sold yet?";
+  const secondQuickMessage = "How to pick up the goods?";
+  const thirdQuickMessage = "Is the price negotiable?";
+
   return (
     <div className="ad-container">
       <ImageSlider ad={ad} />
@@ -122,10 +143,18 @@ const Ad = () => {
                   })
                 }.
               </Typography>
-              {writeToTheSellerButton()}
+              {!isAdMine && writeToTheSellerButton()}
             </div>
           </Paper> :
           skeleton("aside-bottom")
+        }
+        {isAdMine &&
+          <Alert severity="info" className="alert">
+            That is your Ad. You can&nbsp;
+            <Link color="error" underline="hover" onClick={deleteAd}>
+              delete it
+            </Link> any time.
+          </Alert>
         }
       </div>
       {ad ?
@@ -139,30 +168,40 @@ const Ad = () => {
         </Paper> :
         skeleton("description")
       }
-      {seller ?
-        <Paper className="questions">
-          <Typography variant="h6">
-            Interested?
-          </Typography>
-          <Typography variant="body1">
-            Ask the Seller one of the Questions proposed...
-          </Typography>
-          <Button variant="outlined">
-            Not sold yet?
-          </Button>
-          <Button variant="outlined">
-            How to pick up the goods?
-          </Button>
-          <Button variant="outlined">
-            Is the price negotiable?
-          </Button>
-          <Typography variant="body1">
-            ...or write your own...
-          </Typography>
-          {writeToTheSellerButton()}
-        </Paper> :
-        skeleton("questions")
-      }
+      {!isAdMine && (
+        seller ?
+          <Paper className="questions">
+            <Typography variant="h6">
+              Interested?
+            </Typography>
+            <Typography variant="body1">
+              Ask the Seller one of the Questions proposed...
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={() => startConversation(firstQuickMessage)}
+            >
+              Not sold yet?
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => startConversation(secondQuickMessage)}
+            >
+              How to pick up the goods?
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => startConversation(thirdQuickMessage)}
+            >
+              Is the price negotiable?
+            </Button>
+            <Typography variant="body1">
+              ...or write your own...
+            </Typography>
+            {writeToTheSellerButton()}
+          </Paper> :
+          skeleton("questions")
+      )}
       <FirstMessageDialog
         open={isDialogOpen}
         closeDialog={closeDialog}

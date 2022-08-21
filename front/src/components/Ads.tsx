@@ -1,18 +1,11 @@
 import { useState, useEffect, FC } from 'react';
 import Menu from "./Menu";
 import { getAds } from "../functions/functions";
-import { useNavigate } from 'react-router-dom';
 import {
-  Button,
-  Card,
-  CardActions,
-  CardMedia,
   Skeleton,
-  CardContent,
   Typography,
   TextField,
   InputAdornment,
-  CardActionArea,
   FormControl,
   InputLabel,
   Select,
@@ -20,8 +13,9 @@ import {
   Pagination,
 } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
-import { SearchOff, NoPhotography } from '@mui/icons-material';
+import { SearchOff } from '@mui/icons-material';
 import { AdInterface, GetAdsPropsInterface, SortingOptionInterface } from '../types';
+import AdCard from "./AdCard";
 
 const Ads: FC = () => {
   const [ads, setAds] = useState<Array<AdInterface> | null>(null);
@@ -34,8 +28,7 @@ const Ads: FC = () => {
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [adsAmount, setAdsAmount] = useState(0);
-  const navigate = useNavigate();
-  const renderParticularAd = (id: string): void => navigate(`/ad/${id}`);
+
   const defaultPage = 1;
   let getAdsProps: GetAdsPropsInterface = {
     functionProps: {
@@ -147,56 +140,8 @@ const Ads: FC = () => {
               };
               return content;
             }() :
-            ads?.map(el => (
-              <Card className="card">
-                <CardActionArea
-                  className="card-action-area"
-                  onClick={() => renderParticularAd(el._id)}
-                >
-                  {el.images.length && el.images[0].data ?
-                    <CardMedia
-                      component="img"
-                      alt="1"
-                      // height="140"
-                      image={`data:image/png;base64,${el.images[0].data}`}
-                    /> :
-                    <NoPhotography />
-                  }
-                </CardActionArea>
-                <CardContent className="card-content">
-                  <>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                      onClick={() => renderParticularAd(el._id)}
-                      className="product-title"
-                    >
-                      {el.textInfo.title}
-                    </Typography>
-                    <Typography
-                      gutterBottom
-                      variant="h6"
-                      component="div"
-                    >
-                      {el.textInfo.price ? `$${el.textInfo.price}` : "For free"}
-                    </Typography>
-                  </>
-                  <Typography variant="body2">
-                    {el.textInfo.category}, {el.textInfo.subCategory}
-                    <br />
-                    By {el.textInfo.sellerName} from {el.textInfo.region}, {el.textInfo.city}
-                  </Typography>
-                </CardContent>
-                <CardActions className="card-actions">
-                  <Button
-                    onClick={() => renderParticularAd(el._id)}
-                    size="large"
-                  >
-                    Learn more...
-                  </Button>
-                </CardActions>
-              </Card>
+            ads?.map(ad => (
+              <AdCard ad={ad} />
             ))
           }
           {!ads &&

@@ -3,7 +3,6 @@
   min-height: calc(100vh - 64px);
   background-color: $secondary_bright;
   @include border-box();
-  user-select: none;
 
   h4 {
     @include size(700px);
@@ -53,8 +52,15 @@
 
       .image-card,
       .main-image-card {
-        opacity: 0;
-        transition: 0.3s ease-in-out;
+        .delete-button {
+          @include absolute(4px, 4px);
+          opacity: 0;
+        }
+        .backdrop {
+          @include absolute();
+          background-color: rgba(255, 243, 224, 0.3) !important;
+          @include size(100% !important, 100% !important);
+        }
       }
 
       .image-card:hover,
@@ -62,7 +68,8 @@
         .delete-button {
           @include absolute(4px, 4px);
           background-color: #fff !important;
-          animation: myAnimation 0.3s linear;
+          opacity: 1;
+          transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
         }
       }
 
@@ -90,51 +97,47 @@
     }
   }
 
-  .deletion-backdrop,
-  .loading-backdrop {
-    @include absolute();
-    background-color: rgba(255, 243, 224, 0.3) !important;
-    @include size(100% !important, 100% !important);
-  }
-
-  .complex-form-row {
-    @include flex-options($justify_content: space-between, $wrap: wrap);
-    @include indents(0 0 16px !important);
-
-    .half-width-field {
-      @include size(345px);
-      @include indents(0 !important);
-      transition: all .3s ease;
-
-      &:nth-child(2) {
-        animation: myAnimation 1s linear;
+  form {
+    .form-row {
+      @include indents(0 0 16px !important);
+    }
+    .complex-form-row {
+      @include flex-options($justify_content: space-between, $wrap: wrap);
+      @include indents(0 0 16px !important);
+  
+      .half-width-field {
+        @include size(345px);
+        @include indents(0 !important);
+        transition: all .3s ease;
+  
+        &:nth-child(2) {
+          animation: myAnimation 1s linear;
+        }
+      }
+  
+      .full-width-field {
+        @include indents(0 !important);
+        @include size(100%);
+        transition: all 3s ease-in-out;
       }
     }
-
-    .full-width-field {
-      @include indents(0 !important);
-      @include size(100%);
-      transition: all 3s ease-in-out;
+  
+    .price-block {
+      @include flex-options($justify_content: space-between);
+      @include indents(0 0 16px !important);
+      align-items: top;
+  
+      .price-field {
+        @include size(550px);
+      }
+  
+      .price-label {
+        @include size($height: 56px);
+      }
     }
   }
 
-  .form-row {
-    @include indents(0 0 16px !important);
-  }
 
-  .price-block {
-    @include flex-options($justify_content: space-between);
-    @include indents(0 0 16px !important);
-    align-items: top;
-
-    .price-field {
-      @include size(550px);
-    }
-
-    .price-label {
-      @include size($height: 56px);
-    }
-  }
 
   .info-card {
     @include size(500px, 500px);
