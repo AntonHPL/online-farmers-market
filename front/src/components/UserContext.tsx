@@ -33,12 +33,13 @@ export const WithUserContext: FC<{ children: ReactNode }> = ({ children }) => {
                                 setUser(res.data[0]);
                                 setIsTokenValidationComplete(true);
                             })
+                            .catch(error => console.error("The error occured: ", error.message));
                     } else {
                         setIsLogInDialogOpen(true);
                         setIsTokenValidationComplete(true);
                     }
                 })
-                .catch(error => console.error(error));
+                .catch(error => console.error("The error occured: ", error.message));
     }, [tokenValidation, isAccountImageChanged]);
 
     const value = {

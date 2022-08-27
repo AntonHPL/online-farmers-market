@@ -14,7 +14,8 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 	chatId,
 	setChatId,
 	setOldMessages,
-	setIsChatChosen
+	setIsChatChosen,
+	setLoading,
 }) => {
 	const [chatsData, setChatsData] = useState<Array<ChatInterface> | null>(null);
 	const [dialog, setDialog] = useState<ChatDeletionDialogInterface>({ open: false, chatId: "" });
@@ -65,7 +66,8 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 						});
 					});
 					setChats(modifiedChatsData);
-				});
+				})
+				.catch(error => console.error("The error occured: ", error.message));
 		};
 	}, [chatsData]);
 
@@ -99,9 +101,14 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 						setChats([]);
 					}
 				})
+				.catch(error => console.error("The error occured: ", error.message));
 	};
 
-	const closeDialog = () => setDialog({ open: false, chatId: "" })
+	const closeDialog = () => {
+		setIsChatChosen(false);
+		setChatId("");
+		setDialog({ open: false, chatId: "" });
+	};
 
 	const revealHistory = (el: string): void => {
 		const relatedChat = chats?.find(chat => chat.adId === el);
@@ -112,10 +119,19 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 	};
 
 	useEffect(() => {
-		chatId &&
+		if (chatId) {
+			setLoading(true);
 			axios
 				.get(`/api/chat/${chatId}`)
-				.then(({ data }) => setOldMessages(data.messages));
+				.then(({ data }) => {
+					setOldMessages(data.messages);
+				})
+				.catch(error => {
+					console.error("The error occured: ", error.message);
+					setLoading(false);
+				})
+		}
+
 	}, [chatId]);
 
 	const skeletons = (): Array<ReactElement> => {
@@ -152,7 +168,9 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 											<div className="seller-image">
 												<img src={`data:image/png;base64,${chat.sellerImage}`} />
 											</div> :
-											<AccountCircle viewBox="2 2 20 20" className="account-circle" />
+											<div className="account-circle-container">
+												<AccountCircle viewBox="2 2 20 20" className="account-circle" />
+											</div>
 										}
 									</div>
 									<div className="sender-info">
@@ -160,7 +178,7 @@ const Interlocutors: FC<InterlocutorsPropsInterface> = ({
 											{chat.myInterlocutor?.name}
 										</Typography>
 										<Typography variant="h6">
-											{chat.adTitle}
+											{chat.adTitle || "(Deleted Ad.)"}
 										</Typography>
 										<>
 											{messageFound ? (

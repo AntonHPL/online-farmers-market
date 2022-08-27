@@ -5,7 +5,7 @@ import axios from "axios";
 import { AdInterface, SellerInterface } from "../types";
 import FirstMessageDialog from "./FirstMessageDialog";
 import ImageSlider from "./ImageSlider";
-import { Button, Typography, Skeleton, Link, Paper, Alert } from "@mui/material";
+import { Backdrop, Button, Typography, Skeleton, Link, Paper, Alert, CircularProgress } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 
 const Ad = () => {
@@ -18,12 +18,13 @@ const Ad = () => {
   const [messageText, setMessageText] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [seller, setSeller] = useState<SellerInterface | null>(null);
+  const [deletion, setDeletion] = useState(false);
 
   useEffect(() => {
     axios
       .get(`/api/ad/${paramsId}`)
       .then(({ data }) => setAd(data))
-      .catch(error => console.log(error));
+      .catch(error => console.error("The error occured: ", error.message));
   }, []);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const Ad = () => {
       axios
         .get(`/api/seller/${ad.textInfo.sellerId}`)
         .then(({ data }) => setSeller(data[0]))
-        .catch(error => console.error(error));
+        .catch(error => console.error("The error occured: ", error.message));
   }, [ad]);
 
   const isAdMine = user?._id === ad?.textInfo.sellerId;
@@ -43,19 +44,30 @@ const Ad = () => {
         .then(({ data }) => {
           if (data) {
             navigate("/profile/chats");
+            localStorage.setItem("outletTitle", "My Chats");
             localStorage.setItem("ad-id_selected", ad._id);
             textReceived && localStorage.setItem("message-text", textReceived);
           } else {
             setIsDialogOpen(true);
             textReceived && setMessageText(textReceived);
           }
-        });
+        })
+        .catch(error => console.error("The error occured: ", error.message));
   };
 
   const deleteAd = () => {
+    setDeletion(true);
     axios
-    .delete(`/api/ad/${ad?.creationDate}`)
-    .then(() => navigate("/profile/ads"))
+      .delete(`/api/ad/${ad?.creationDate}`)
+      .then(() => {
+        setDeletion(false);
+        navigate("/profile/ads");
+        localStorage.setItem("outletTitle", "My Ads");
+      })
+      .catch(error => {
+        setDeletion(false);
+        console.error("The error occured: ", error.message)
+      })
   };
 
   const closeDialog = (): void => {
@@ -66,6 +78,7 @@ const Ad = () => {
   const writeToTheSellerButton = (): ReactElement => {
     return (
       <Button
+        disabled={!user}
         variant="contained"
         onClick={() => startConversation()}
         className="write-to-the-seller-button"
@@ -74,6 +87,19 @@ const Ad = () => {
       </Button>
     )
   };
+
+  const quickMessageButtons = (messages: Array<string>): Array<ReactElement> => {
+    return messages.map(el => (
+      <Button
+        variant="outlined"
+        disabled={!user}
+        onClick={() => startConversation(el)}
+      >
+        {el}
+      </Button>
+    ));
+  };
+
   const skeleton = (extraClass: string): ReactElement => {
     return (
       <Skeleton
@@ -82,10 +108,6 @@ const Ad = () => {
       />
     )
   };
-
-  const firstQuickMessage = "Not sold yet?";
-  const secondQuickMessage = "How to pick up the goods?";
-  const thirdQuickMessage = "Is the price negotiable?";
 
   return (
     <div className="ad-container">
@@ -177,24 +199,7 @@ const Ad = () => {
             <Typography variant="body1">
               Ask the Seller one of the Questions proposed...
             </Typography>
-            <Button
-              variant="outlined"
-              onClick={() => startConversation(firstQuickMessage)}
-            >
-              Not sold yet?
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => startConversation(secondQuickMessage)}
-            >
-              How to pick up the goods?
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => startConversation(thirdQuickMessage)}
-            >
-              Is the price negotiable?
-            </Button>
+            {quickMessageButtons(["Not sold yet?", "How to pick up the goods?", "Is the price negotiable?"])}
             <Typography variant="body1">
               ...or write your own...
             </Typography>
@@ -211,6 +216,9 @@ const Ad = () => {
         ad={ad}
         paramsId={paramsId}
       />
+      <Backdrop open={deletion}>
+        <CircularProgress />
+      </Backdrop>
     </div>
   );
 };

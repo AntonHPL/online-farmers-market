@@ -5,16 +5,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
-import { ProfileContextInterface, ModifiedChatInterface } from "../types";
+import { ProfileContextInterface } from "../types";
 import ConfirmationDialog from "./ConfirmationDialog";
 
 const Profile: FC = () => {
   // const { user, isAccountImageChanged, setIsAccountImageChanged } = useContext(UserContext);
   const defaultOutletTitle = "My Profile";
-  const [outletTitle, setOutletTitle] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [changingAccountImage, setChangingAccountImage] = useState(false);
   const closeDialog = () => setIsDialogOpen(false);
+  const outletTitle = localStorage.getItem("outletTitle");
   const navigate = useNavigate();
 
   const outletContext: ProfileContextInterface = {
@@ -22,37 +22,37 @@ const Profile: FC = () => {
     closeDialog,
     outletTitle,
     setIsDialogOpen,
-    setOutletTitle,
   };
 
-  useEffect(() => {
-    localStorage.getItem("ad-id_selected") ? setOutletTitle("My Chats") : setOutletTitle(defaultOutletTitle);
-  }, []);
+  // useEffect(() => {
+  //   localStorage.getItem("ad-id_selected") ? setOutletTitle("My Chats") : setOutletTitle(defaultOutletTitle);
+  // }, []);
 
-  useEffect(() => {
-    outletTitle &&
-      navigate(
-        outletTitle === defaultOutletTitle ?
-          "/profile/general-info" :
-          outletTitle === "My Ads" ?
-            "/profile/ads" :
-            outletTitle === "My Chats" ?
-              "/profile/chats" :
-              "/"
-      );
-  }, [outletTitle]);
+  // useEffect(() => {
+
+  //   outletTitle &&
+  //     navigate(
+  //       outletTitle === defaultOutletTitle ?
+  //         "/profile/general-info" :
+  //         outletTitle === "My Ads" ?
+  //           "/profile/ads" :
+  //           outletTitle === "My Chats" ?
+  //             "/profile/chats" :
+  //             "/"
+  //     );
+  // }, [outletTitle]);
 
   return (
     <div className="profile-container">
-      <Typography variant="h4">
-        {outletTitle}
-      </Typography>
       {outletTitle !== defaultOutletTitle &&
         <Breadcrumbs aria-label="breadcrumb">
           <Link
             underline="hover"
             color="inherit"
-            onClick={() => setOutletTitle("My Profile")}
+            onClick={() => {
+              localStorage.setItem("outletTitle", "My Profile");
+              navigate("/profile/general-info");
+            }}
           >
             My Profile
           </Link>
@@ -61,6 +61,9 @@ const Profile: FC = () => {
           </Typography>
         </Breadcrumbs>
       }
+      <Typography variant="h4">
+        {outletTitle}
+      </Typography>
       <Outlet context={outletContext} />
       <ConfirmationDialog
         open={isDialogOpen}

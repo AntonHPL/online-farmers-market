@@ -2,26 +2,28 @@ const express = require("express");
 const WebSocket = require("ws");
 const uuid = require("uuid");
 const mongoose = require("mongoose");
-const routes = require('./routes/routes');
-const path = require('path');
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const chalk = require("chalk");
 require("dotenv").config();
 
+const adsRoutes = require('./routes/routes/ads');
+const chatsRoutes = require("./routes/routes/chats");
+const menusRoutes = require("./routes/routes/menus");
+const otherRoutes = require("./routes/routes/other");
+const regionsRoutes = require("./routes/routes/regions");
+const usersRoutes = require("./routes/routes/users");
+
 const app = express();
 const wss = new WebSocket.Server({ port: 3002 });
 const PORT = 3001;
-const router = express.Router();
 const webSocketMessage = chalk.bold.bgBlue;
 
 app.use(cors());
-// app.use(express.static(path.join(__dirname, "images")));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json(), express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.json());
-app.use(routes);
+app.use(adsRoutes, chatsRoutes, menusRoutes, otherRoutes, regionsRoutes, usersRoutes);
 
 app.use("/api", createProxyMiddleware({
     target: process.env.PROXY,
@@ -31,21 +33,17 @@ app.use("/api", createProxyMiddleware({
 }));
 
 const clients = {};
-// const messages = [];
 
 const v4 = uuid.v4;
 
 wss.on("connection", ws => {
     console.log(webSocketMessage("The Client is connected to the WebSocket Server."));
-    // ws.send(JSON.stringify("The Client is connected to the WebSocket Server."));
-    // ws.send(JSON.stringify(messages));
     const id = v4();
     clients[id] = ws;
     console.log(`New Client ${id}`);
 
     ws.on("message", (data, isBinary) => {
         const { senderId, message } = JSON.parse(data);
-        // messages.push({ name, message });
         for (const id in clients) {
             clients[id].send(JSON.stringify({ senderId, message, creationDate: new Date().toISOString() }))
         };
@@ -62,7 +60,6 @@ wss.on("connection", ws => {
         console.log(`Client is closed ${id}`);
     })
 });
-
 
 mongoose
     .connect(process.env.MONGO_URL)

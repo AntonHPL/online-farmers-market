@@ -10,10 +10,12 @@ import {
 } from '@mui/material';
 import { NoPhotography } from "@mui/icons-material";
 import { AdCardPropsInterface } from "../types";
+import { useNavigate } from 'react-router-dom';
 
 const AdCard: FC<AdCardPropsInterface> = ({ ad }) => {
+  const navigate = useNavigate();
   const renderParticularAd = (id: string): void => {
-    window.open(`/ad/${id}`, "blank")
+    navigate(`/ad/${id}`)
   };
 
   return (

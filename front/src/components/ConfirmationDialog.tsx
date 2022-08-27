@@ -16,6 +16,7 @@ const ConfirmationDialog: FC<ConfirmationDialogPropsInterface> = ({ open, closeD
       keepMounted
       onClose={closeDialog}
       aria-describedby="alert-dialog-slide-description"
+      className="confirmation-dialog"
     >
       <DialogTitle>
         Please confirm the Action.
@@ -26,11 +27,14 @@ const ConfirmationDialog: FC<ConfirmationDialogPropsInterface> = ({ open, closeD
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setChangingAccountImage(!changingAccountImage)}>
-          Yes
-        </Button>
         <Button onClick={closeDialog}>
           No
+        </Button>
+        <Button onClick={() => {
+          setChangingAccountImage(!changingAccountImage);
+          closeDialog();
+        }}>
+          Yes
         </Button>
       </DialogActions>
     </Dialog>

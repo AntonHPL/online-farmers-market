@@ -240,15 +240,15 @@ export interface CaptchaPropsInterface {
 export interface ProfileContextInterface {
   changingAccountImage: boolean,
   closeDialog: () => void,
-  outletTitle: string,
+  outletTitle: string | null,
   setIsDialogOpen: (isDialogOpen: boolean) => void,
-  setOutletTitle: (outletTitle: string) => void,
 }
 
 export interface ChatDeletionDialogInterface {
   open: boolean,
   chatId: string,
 }
+
 export interface ChatDeletionDialogPropsInterface {
   dialog: ChatDeletionDialogInterface,
   closeDialog: () => void,
@@ -265,6 +265,7 @@ export interface InterlocutorsPropsInterface {
 	setChatId: (chatId: string) => void,
 	setOldMessages: (oldMessages: Array<MessageInterface> | null) => void,
 	setIsChatChosen: (isChatChosen: boolean) => void,
+  setLoading: (loading: boolean) => void,
 }
 
 export interface LastMessageInterface {
@@ -274,4 +275,25 @@ export interface LastMessageInterface {
 
 export interface AdCardPropsInterface {
   ad: AdInterface,
+}
+
+export interface NewAdFormPropsInterface {
+  ad: EmptyAdInterface,
+  adIsCreated: boolean,
+  setAd: (ad: EmptyAdInterface) => void,
+  creationDate: string,
+  mainPictureId: string,
+  emptyAd: EmptyAdInterface,
+  setCreationDate: (creationDate: string) => void,
+  setImages: (images: Array<ImageInterface> | null) => void,
+}
+
+export interface ImagesCardPropsInterface {
+  adIsCreated: boolean,
+  setAdIsCreated: (adIsCreated: boolean) => void,
+  creationDate: string,
+  mainPictureId: string,
+  setMainPictureId: (mainPictureId: string) => void,
+  images: Array<ImageInterface> | null,
+  setImages: (images: Array<ImageInterface> | null) => void,
 }

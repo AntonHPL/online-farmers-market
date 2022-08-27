@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, FC, FormEvent } from "react";
+import { useState, useContext, useEffect, FC, FormEvent, ReactElement } from "react";
 import { Backdrop, TextField, IconButton, Paper, Typography, CircularProgress } from "@mui/material";
 import { Block, Chat, Send } from "@mui/icons-material";
 import Interlocutors from "./Interlocutors";
@@ -16,6 +16,7 @@ const Chats: FC = () => {
 	const [chats, setChats] = useState<Array<ModifiedChatInterface> | null>(null);
 	const [myId, setMyId] = useState("");
 	const [isChatChosen, setIsChatChosen] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
@@ -81,6 +82,21 @@ const Chats: FC = () => {
 		setAllMessages(arr);
 	}, [newMessage, oldMessages]);
 
+	useEffect(() => {
+		allMessages.length && setLoading(false);
+	}, [allMessages]);
+
+	const isAdTitlePresent = chats?.find(el => el._id === chatId)?.adTitle;
+
+	const backdrop = (): ReactElement => (
+		<Backdrop
+			className="backdrop"
+			open={true}
+		>
+			<CircularProgress />
+		</Backdrop>
+	);
+
 	return (
 		<div className="chat-container">
 			<>
@@ -94,8 +110,9 @@ const Chats: FC = () => {
 					setChatId={setChatId}
 					setOldMessages={setOldMessages}
 					setIsChatChosen={setIsChatChosen}
+					setLoading = {setLoading}
 				/>
-				{chats ? (
+				{!loading && chats ? (
 					chats?.length ?
 						<div className="chat-and-form">
 							{isChatChosen ?
@@ -131,6 +148,7 @@ const Chats: FC = () => {
 									<form onSubmit={send}>
 										<TextField
 											required
+											disabled={!isAdTitlePresent}
 											type="text"
 											size="small"
 											variant="outlined"
@@ -140,7 +158,7 @@ const Chats: FC = () => {
 											onChange={e => setMessageText(e.target.value)}
 											className="form-row"
 										/>
-										<IconButton type="submit">
+										<IconButton type="submit" disabled={!isAdTitlePresent}>
 											<Send />
 										</IconButton>
 									</form>
@@ -165,13 +183,9 @@ const Chats: FC = () => {
 							</div>
 						</div>
 				) :
-					<Backdrop
-						className="backdrop"
-						open={true}
-					>
-						<CircularProgress />
-					</Backdrop>
+					backdrop()
 				}
+				{/* {loading && backdrop()} */}
 			</>
 		</div >
 	);

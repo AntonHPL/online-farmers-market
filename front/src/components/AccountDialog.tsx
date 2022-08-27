@@ -4,7 +4,7 @@ import SignUpForm from "./SignUpForm";
 import { Dialog, DialogTitle, DialogContent, Backdrop, CircularProgress } from "@mui/material";
 import { UserContext } from './UserContext';
 
-const ProfileDialog: FC = () => {
+const AccountDialog: FC = () => {
   const { isLogInDialogOpen, setIsLogInDialogOpen } = useContext(UserContext);
   const [loading, setLoading] = useState(false);
   const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
@@ -52,4 +52,4 @@ const ProfileDialog: FC = () => {
   );
 };
 
-export default ProfileDialog;
+export default AccountDialog;

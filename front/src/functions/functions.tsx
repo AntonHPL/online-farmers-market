@@ -44,6 +44,7 @@ export const getAds = ({
           setAdsLoading(false);
         });
     })
+    .catch(error => console.error("The error occured: ", error.message));
 };
 
 export const errorFound = (errors: Array<ErrorInterface>, field: string): ErrorInterface | undefined => errors.find(el => el.field === field);

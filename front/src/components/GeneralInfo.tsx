@@ -1,23 +1,25 @@
 import { useState, useEffect, useContext, FC } from 'react';
 import { useProfileContext } from '../functions/functions';
 import { UserContext } from "./UserContext";
-import { Button, Paper, IconButton, Typography } from "@mui/material";
+import { Button, Backdrop, Paper, IconButton, Typography, CircularProgress } from "@mui/material";
 import { AccountCircle } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 const GeneralInfo: FC = () => {
   const [accountImage, setAccountImage] = useState("");
-  const { changingAccountImage, closeDialog, outletTitle, setIsDialogOpen, setOutletTitle } = useProfileContext();
+  const { changingAccountImage, closeDialog, setIsDialogOpen } = useProfileContext();
   const [imageToUpload, setImageToUpload] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
   const { user, isAccountImageChanged, setIsAccountImageChanged } = useContext(UserContext);
 
-  useEffect(() => {
-    outletTitle !== "My Profile" && setOutletTitle("My Profile");
-  }, []);
+  // useEffect(() => {
+  //   outletTitle !== "My Profile" && setOutletTitle("My Profile");
+  // }, []);
 
   useEffect(() => {
     imageToUpload && setIsDialogOpen(true);
@@ -25,6 +27,7 @@ const GeneralInfo: FC = () => {
 
   useEffect(() => {
     if (imageToUpload) {
+      setLoading(true);
       const fd = new FormData();
       user && fd.append("userId", user._id);
       fd.append("imageInput", imageToUpload);
@@ -33,9 +36,12 @@ const GeneralInfo: FC = () => {
         .then(() => {
           setIsAccountImageChanged(!isAccountImageChanged)
           setLoading(false);
-          closeDialog();
+        })
+        .catch(error => {
+          console.error("The error occured: ", error.message)
+          setLoading(false);
         });
-    }
+    };
   }, [changingAccountImage]);
   useEffect(() => {
     user && user.image && setAccountImage(user.image.data);
@@ -62,8 +68,12 @@ const GeneralInfo: FC = () => {
             {user?.image ?
               <div className="image">
                 <img src={`data:image/png;base64,${accountImage}`} />
+                <Backdrop open={loading} className="backdrop">
+                  <CircularProgress />
+                </Backdrop>
               </div> :
-              <AccountCircle />}
+              <AccountCircle className="account-circle" />
+            }
           </IconButton>
         </label>
         <div>
@@ -91,13 +101,19 @@ const GeneralInfo: FC = () => {
         </Paper>
         <div className="buttons">
           <Button
-            onClick={() => setOutletTitle("My Ads")}
+            onClick={() => {
+              navigate("/profile/ads");
+              localStorage.setItem("outletTitle", "My Ads");
+            }}
             variant="contained"
           >
             My Ads
           </Button>
           <Button
-            onClick={() => setOutletTitle("My Chats")}
+            onClick={() => {
+              navigate("/profile/chats");
+              localStorage.setItem("outletTitle", "My Chats");
+            }}
             variant="contained"
           >
             My Chats

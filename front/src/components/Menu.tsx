@@ -19,7 +19,8 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
 
   useEffect(() => {
     setMenuLoading(true);
-    axios.get("/api/menu")
+    axios
+      .get("/api/menu")
       .then(({ data }) => {
         const items = data.map((e: DataMenuInterface): MenuInterface => {
           return {
@@ -37,7 +38,8 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
         setListItems(items);
         setStableItems(items);
         setMenuLoading(false);
-      });
+      })
+      .catch(error => console.error("The error occured: ", error.message));
   }, []);
 
   const onItemClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -81,7 +83,7 @@ const Menu: FC<MenuPropsInterface> = ({ getAdsProps, setSubString, setCategory, 
   }
 
   return (
-    <div className="menu_container">
+    <div className="menu-container">
       {menuLoading ?
         <Skeleton
           variant="rectangular"

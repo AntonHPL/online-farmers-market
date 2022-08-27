@@ -1,130 +1,41 @@
-@import "./styles/variables/variables.scss";
-@import "./styles/mixins/mixins.scss";
-@import "./styles/Ad.scss";
-@import "./styles/Ads.scss";
-@import "./styles/Captcha.scss";
-@import "./styles/Chats.scss";
-@import "./styles/Header.scss";
-@import "./styles/ImageSlider.scss";
-@import "./styles/LogInForm.scss";
-@import "./styles/NewAd.scss";
-@import "./styles/Profile.scss";
-@import "./styles/SignUpForm.scss";
-@import "./styles/AdCard.scss";
+@import "./styles/variables/variables.scss",
+"./styles/mixins/mixins.scss",
+"./styles/AccountDialog.scss",
+"./styles/Ad.scss",
+"./styles/AdCard.scss",
+"./styles/Ads.scss",
+"./styles/Captcha.scss",
+"./styles/ChatDeletionDialog.scss",
+"./styles/Chats.scss",
+"./styles/ConfirmationDialog.scss",
+"./styles/FirstMessageDialog.scss",
+"./styles/GeneralInfo.scss",
+"./styles/Header.scss",
+"./styles/ImagesCard.scss",
+"./styles/ImageSlider.scss",
+"./styles/Interlocutors.scss",
+"./styles/LogInForm.scss",
+"./styles/Menu.scss",
+"./styles/MyAds.scss",
+"./styles/NewAd.scss",
+"./styles/NewAdForm.scss",
+"./styles/Profile.scss",
+"./styles/SignUpForm.scss",
+"./styles/SuccessDialog.scss",
+"./styles/other.scss";
 
 @import url($fonts_url);
-
-@keyframes myAnimation {
-  from {
-    opacity: 0
-  }
-
-  to {
-    opacity: 1
-  }
-}
-
-* {
-  font-family: 'Work Sans', sans-serif !important;
-  @include indents(0);
-  user-select: none;
-}
 
 form {
   @include flex_options(column);
   @include size(700px);
 }
 
-.half-width_field {
-  @include size(345px);
-  @include indents(0 !important);
-  transition: all .3s ease;
-
-  &:nth-child(2) {
-    animation: myAnimation 1s linear;
-  }
-}
-
-.deleting,
-.loading {
-  @include absolute();
-  color: $primary_main;
-}
-
 h4 {
   @include size(700px);
   @include indents($padding: 16px 0 !important);
-  // @include border(red, 4px);
 }
 
 .css-18lvne8-MuiList-root {
   @include indents($padding: 0 !important);
-}
-
-// .prompt {
-//   @include indents(5px 0 0);
-// }
-
-a {
-  cursor: pointer;
-}
-
-.menu_container {
-  width: 360px;
-
-  .skeleton {
-    @include size($height: calc(48px * 7))
-  }
-}
-
-
-
-.first-message_dialog {
-  .seller-account_image {
-    @include size(45px, 45px);
-    border-radius: 50%;
-    overflow: hidden;
-    @include flex_center();
-    margin-right: 10px;
-
-    img {
-      object-fit: cover;
-      min-width: 45px;
-      min-height: 45px;
-    }
-  }
-
-  .seller_info {
-    @include flex_options($align-items: center);
-    // @include size(100px, 30px);
-  }
-
-  .MuiDialogContent-root {
-    padding-bottom: 0 !important;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: $secondary_main;
-  border-radius: 4px;
-  padding-right: 20px;
-}
-
-::-webkit-scrollbar-thumb {
-  height: 5px;
-  background: $secondary_dark;
-  border-radius: 4px;
-
-  &:hover {
-    background: $primary_bright;
-  }
-
-  &:active {
-    background: $primary_main;
-  }
 }

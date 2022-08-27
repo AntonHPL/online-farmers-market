@@ -4,7 +4,7 @@ import { AppBar, Menu, MenuItem, Toolbar, Box, Button, IconButton } from "@mui/m
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { UserContext } from "./UserContext";
-import ProfileDialog from "./ProfileDialog";
+import AccountDialog from "./AccountDialog";
 import axios from "axios";
 
 import logo from "../images/logo.png";
@@ -40,6 +40,10 @@ const Header: FC = () => {
         setUser(null);
         setIsLogInDialogOpen(true);
       })
+      .catch(error => {
+        console.error("The error occured: ", error.message);
+        closeMenu();
+      });
   };
 
   useEffect(() => {
@@ -53,6 +57,12 @@ const Header: FC = () => {
   //   axios.get("/api/menu")
   //     .then(({ data }) => setMenu(data));
   // }, []);
+
+  const open = (path: string, outletTitle: string): void => {
+    closeMenu();
+    navigate(`/profile/${path}`);
+    localStorage.setItem("outletTitle", outletTitle);
+  };
 
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -73,19 +83,22 @@ const Header: FC = () => {
     >
       <MenuItem
         onClick={() => {
-          user ? navigate("/profile/general-info") : setIsLogInDialogOpen(true);
+          if (user) {
+            localStorage.setItem("outletTitle", "My Profile");
+            navigate("/profile/general-info");
+          } else {
+            setIsLogInDialogOpen(true);
+          }
           closeMenu();
         }}
       >
         My Profile
       </MenuItem>
-      <MenuItem
-        onClick={() => {
-          closeMenu();
-          navigate("/my-advertisements");
-        }}
-      >
-        My Advertisements
+      <MenuItem onClick={() => open("ads", "My Ads")}>
+        My Ads
+      </MenuItem>
+      <MenuItem onClick={() => open("chats", "My Chats")}>
+        My Chats
       </MenuItem>
       <MenuItem onClick={logout}>
         Log out
@@ -179,7 +192,10 @@ const Header: FC = () => {
               color="inherit"
               endIcon={
                 <div className="account-image">
-                  <img src={`data:image/png;base64,${accountImage}`} />
+                  {user.image ?
+                    <img src={`data:image/png;base64,${accountImage}`} /> :
+                    <AccountCircle />
+                  }
                 </div>
               }
               className="profile-button"
@@ -214,7 +230,7 @@ const Header: FC = () => {
       </AppBar>
       {/* {renderMobileMenu} */}
       {user && renderMenu}
-      <ProfileDialog />
+      <AccountDialog />
     </div>
   );
 }

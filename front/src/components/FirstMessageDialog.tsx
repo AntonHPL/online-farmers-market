@@ -28,19 +28,24 @@ const FirstMessageDialog: FC<FirstMessageDialogPropsInterface> = ({
         setMessageText("");
         closeDialog();
       })
+      .catch(error => {
+        console.error("The error occured: ", error.message);
+        closeDialog();
+      });
   };
+
   return (
     <Dialog
       open={open}
       keepMounted
       onClose={closeDialog}
       aria-describedby="alert-dialog-slide-description"
-      className="first-message_dialog"
+      className="first-message-dialog"
     >
       <DialogTitle>
         {seller &&
-          <div className="seller_info">
-            <div className="seller-account_image">
+          <div className="seller-info">
+            <div className="seller-account-image">
               {seller.image ?
                 <img src={`data:image/png;base64,${seller.image.data}`} /> :
                 <AccountCircle />

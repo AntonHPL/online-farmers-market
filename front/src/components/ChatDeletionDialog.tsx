@@ -10,7 +10,7 @@ const ChatDeletionDialog: FC<ChatDeletionDialogPropsInterface> = ({ dialog, clos
       keepMounted
       onClose={closeDialog}
       aria-describedby="alert-dialog-slide-description"
-      className="first-message_dialog"
+      className="chat-deletion-dialog"
     >
       <DialogTitle>
         Are you sure you want to delete this Dialog?
@@ -30,6 +30,10 @@ const ChatDeletionDialog: FC<ChatDeletionDialogPropsInterface> = ({ dialog, clos
             .then(() => {
               getChatsData();
               closeDialog();
+            })
+            .catch(error => {
+              closeDialog();
+              console.error("The error occured: ", error.message);
             })
         }}>
           OK

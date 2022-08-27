@@ -27,47 +27,49 @@ const ImageSlider: FC<ImageSliderPropsInterface> = ({ ad }) => {
   return (
     ad ?
       <Paper className="image-slider">
-        {ad.images.length ?
-          <>
-            <div
-              className="slides"
-              style={style}
-              onTransitionEnd={() => {
-                if (ad) {
-                  counter === 0 && setCounter(ad.images.length);
-                  counter === ad.images.length + 1 && setCounter(1);
-                }
-              }}
-            >
-              {ad.images.length &&
-                <>
-                  <img src={`data:image/png;base64,${ad.images[ad.images.length - 1].data}`} />
-                  {ad.images.map(el => {
-                    return (
-                      <img src={`data:image/png;base64,${el.data}`} />
-                    )
-                  })}
-                  <img src={`data:image/png;base64,${ad.images[0].data}`} />
-                </>
-              }
+        {ad.images.length ? (
+          ad.images.length > 1 ?
+            <>
+              <div
+                className="slides"
+                style={style}
+                onTransitionEnd={() => {
+                  if (ad) {
+                    counter === 0 && setCounter(ad.images.length);
+                    counter === ad.images.length + 1 && setCounter(1);
+                  }
+                }}
+              >
+                <img src={`data:image/png;base64,${ad.images[ad.images.length - 1].data}`} />
+                {ad.images.map(el => {
+                  return (
+                    <img src={`data:image/png;base64,${el.data}`} />
+                  )
+                })}
+                <img src={`data:image/png;base64,${ad.images[0].data}`} />
+              </div>
+              <div className='buttons'>
+                <IconButton onClick={() => {
+                  if (ad && counter < 1) return;
+                  setCounter(prev => prev - 1);
+                  setNextButtonClicked(false);
+                }}>
+                  <NavigateBefore />
+                </IconButton>
+                <IconButton onClick={() => {
+                  if (ad && counter > ad.images.length) return;
+                  setCounter(prev => prev + 1);
+                  setNextButtonClicked(true);
+                }}>
+                  <NavigateNext />
+                </IconButton>
+              </div>
+            </> :
+            <div className="slides">
+              <img src={`data:image/png;base64,${ad.images[0].data}`} />
             </div>
-            <div className='buttons'>
-              <IconButton onClick={() => {
-                if (ad && counter < 1) return;
-                setCounter(prev => prev - 1);
-                setNextButtonClicked(false);
-              }}>
-                <NavigateBefore />
-              </IconButton>
-              <IconButton onClick={() => {
-                if (ad && counter > ad.images.length) return;
-                setCounter(prev => prev + 1);
-                setNextButtonClicked(true);
-              }}>
-                <NavigateNext />
-              </IconButton>
-            </div>
-          </> :
+        )
+          :
           <NoPhotography className="no-photo" />
         }
       </Paper> :

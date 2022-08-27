@@ -16,6 +16,7 @@ const SuccessDialog: FC<DialogInterface> = ({ open, closeDialog }) => {
       keepMounted
       onClose={closeDialog}
       aria-describedby="alert-dialog-slide-description"
+      className="success-dialog"
     >
       <DialogTitle>
         Congratulations!
