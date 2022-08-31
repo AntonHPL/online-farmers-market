@@ -16,8 +16,8 @@ const regionsRoutes = require("./routes/routes/regions");
 const usersRoutes = require("./routes/routes/users");
 
 const app = express();
-const wss = new WebSocket.Server({ port: process.env.WS_PORT });
-const PORT = process.env.PORT;
+const wss = new WebSocket.Server({ port: process.env.WS_PORT || 3002 });
+const PORT = process.env.PORT || 3001;
 const webSocketMessage = chalk.bold.bgBlue;
 
 app.use(cors());
