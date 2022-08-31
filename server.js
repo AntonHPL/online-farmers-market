@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(adsRoutes, chatsRoutes, menusRoutes, otherRoutes, regionsRoutes, usersRoutes);
 
 app.use("/api", createProxyMiddleware({
-    target: process.env.PROXY,
+    target: process.env.PROXY || "http://localhost:3001",
     changeOrigin: true,
     // secure: false,
     // https: true
