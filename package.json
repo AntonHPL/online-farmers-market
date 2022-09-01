@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon server.js",
-    "client": "npm start --prefix front",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "cd front && npm run build",
+    "install-client": "cd front && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "nodemon server.js",
+    "client": "cd front && npm start",
+    "dev": "concurrently \"npm run start\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Anton Dashko",

@@ -16,8 +16,8 @@ const regionsRoutes = require("./routes/routes/regions");
 const usersRoutes = require("./routes/routes/users");
 
 const app = express();
-const wss = new WebSocket.Server({ port: process.env.WS_PORT || 3002 });
-const PORT = process.env.PORT || 3001;
+const wss = new WebSocket.Server({ port: process.env.WS_PORT });
+const PORT = process.env.PORT;
 const webSocketMessage = chalk.bold.bgBlue;
 
 app.use(cors());
@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.use(adsRoutes, chatsRoutes, menusRoutes, otherRoutes, regionsRoutes, usersRoutes);
 
 app.use("/api", createProxyMiddleware({
-    target: process.env.PROXY || "http://localhost:3001",
+    target: process.env.PROXY,
     changeOrigin: true,
     // secure: false,
     // https: true
@@ -66,6 +66,10 @@ mongoose
     .then(res => console.log("The connection to the Database was carried out successfully."))
     .catch(error => console.log(`The Error while connecting to the Database occured: ${error.message}`))
 
-app.listen(PORT, 'localhost', error =>
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static("front/build"));
+};
+
+app.listen(PORT, error =>
     console.log(error ? `The Error occured: ${error.message}.` : `The Listening Port is ${PORT}`)
 );
